@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8維認知功能性格測試 / 8 Cognitive Dimensions Explorer</title>
+  <style>
+    :root[data-theme="dark"] {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-mbti: #38bdf8;
+      --accent-func: #a855f7;
+      --accent-highlight: #f59e0b;
+      --badge-bg: #0f172a;
+      --btn-hover: #334155;
+      --progress-bg: #334155;
+      --option-bg: #0f172a;
+      --option-border: #334155;
+      --option-hover: #1e293b;
+    }
+
+    :root[data-theme="light"] {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --accent-mbti: #0284c7;
+      --accent-func: #7e22ce;
+      --accent-highlight: #d97706;
+      --badge-bg: #f1f5f9;
+      --btn-hover: #e2e8f0;
+      --progress-bg: #cbd5e1;
+      --option-bg: #f8fafc;
+      --option-border: #cbd5e1;
+      --option-hover: #f1f5f9;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      padding: 2rem 1rem;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Top Controls */
+    .top-controls {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+
+    .btn-toggle {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .btn-toggle:hover {
+      background: var(--btn-hover);
+    }
+
+    /* Card Styling */
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Page Visibility */
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    /* Visual Aid Chart */
+    .bidirectional-chart {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1.25rem 0;
+    }
+
+    .chart-box {
+      width: 100%;
+      padding: 1rem;
+      border-radius: 8px;
+      background: var(--badge-bg);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid transparent;
+    }
+
+    .chart-box.mbti { border-left-color: var(--accent-mbti); }
+    .chart-box.func { border-left-color: var(--accent-func); }
+
+    .chart-box .label {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .chart-box.mbti .label { color: var(--accent-mbti); }
+    .chart-box.func .label { color: var(--accent-func); }
+
+    .chart-box .desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    .chart-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--accent-highlight);
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    /* Action Buttons */
+    .start-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background-color: var(--accent-mbti);
+      color: #ffffff;
+      border: none;
+      padding: 0.85rem 1.75rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* Progress Bar */
+    .progress-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .progress-bar-bg {
+      height: 10px;
+      background-color: var(--progress-bg);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background-color: var(--accent-mbti);
+      transition: width 0.3s ease;
+    }
+
+    /* Question & Options */
+    .question-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .option-btn {
+      background-color: var(--option-bg);
+      border: 1px solid var(--option-border);
+      color: var(--text-main);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .option-btn:hover {
+      background-color: var(--option-hover);
+      border-color: var(--accent-mbti);
+    }
+
+    /* 3-Second Loading Scanner Page */
+    .analysing-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+      text-align: center;
+      gap: 1.5rem;
+    }
+
+    .scanner-ring {
+      width: 80px;
+      height: 80px;
+      border: 4px solid var(--card-border);
+      border-top-color: var(--accent-mbti);
+      border-right-color: var(--accent-func);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .status-text {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--accent-mbti);
+      min-height: 1.5em;
+    }
+
+    /* Dynamic Motion Emojis */
+    .emoji-container {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .motion-emoji {
+      font-size: 3rem;
+      display: inline-block;
+      user-select: none;
+    }
+
+    .emoji-float { animation: floatMotion 3s ease-in-out infinite; }
+    @keyframes floatMotion {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(6deg); }
+    }
+
+    .emoji-pulse { animation: pulseMotion 2s ease-in-out infinite; }
+    @keyframes pulseMotion {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.18); }
+    }
+
+    .emoji-wave { animation: waveMotion 2.5s ease-in-out infinite; transform-origin: 70% 70%; }
+    @keyframes waveMotion {
+      0%, 100% { transform: rotate(0deg); }
+      20% { transform: rotate(14deg); }
+      40% { transform: rotate(-8deg); }
+      60% { transform: rotate(14deg); }
+      80% { transform: rotate(-4deg); }
+    }
+
+    /* Detailed Result Elements */
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.75rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .result-badge {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent-highlight);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent-mbti);
+      margin-top: 1.25rem;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .story-paragraph, .analogy-box {
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .analogy-box {
+      background: var(--badge-bg);
+      border-left: 4px solid var(--accent-func);
+      padding: 1rem;
+      margin: 0.75rem 0;
+      border-radius: 0 8px 8px 0;
+      font-style: italic;
+    }
+
+    .suggestions-list {
+      list-style-type: none;
+      padding-left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .suggestions-list li {
+      position: relative;
+      padding-left: 1.5rem;
+    }
+
+    .suggestions-list li::before {
+      content: "➔";
+      position: absolute;
+      left: 0;
+      color: var(--accent-mbti);
+    }
+
+    .scores-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .score-chip {
+      background: var(--badge-bg);
+      padding: 0.6rem 0.8rem;
+      border-radius: 6px;
+      border: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+    }
+
+    .score-chip strong { color: var(--accent-func); }
+
+    /* Footer & Disclaimer */
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding-top: 1.25rem;
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .resources-links a {
+      color: var(--accent-mbti);
+      text-decoration: none;
+    }
+
+    .resources-links a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Top Bar Controls -->
+    <div class="top-controls">
+      <button class="btn-toggle" onclick="toggleTheme()">🌓 Theme / 切換主題</button>
+    </div>
+
+    <!-- LANDING PAGE -->
+    <div id="page-landing" class="page active">
+      <div class="card">
+        <header>
+          <h1>8 Cognitive Dimensions Explorer</h1>
+          <p>8維認知功能性格測試</p>
+        </header>
+
+        <p style="text-align: center; color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">
+          Discover your MBTI type through Carl Jung's 8 Cognitive Functions (Ni, Ne, Si, Se, Ti, Te, Fi, Fe). 
+          Each test round randomly selects 20 questions from our 80-question library for an accurate, unique evaluation.
+          <br><br>
+          通過榮格 8 大認知功能（Ni, Ne, Si, Se, Ti, Te, Fi, Fe）探索你的 MBTI 類型。每次測試將從 80 題庫中隨機抽取 20 題進行評估。
+        </p>
+
+        <!-- Visual Aid -->
+        <div class="bidirectional-chart">
+          <div class="chart-box mbti">
+            <div class="label">🧩 MBTI Type Profile / MBTI 類型</div>
+            <div class="desc">Global Personality Archetype<br><em>宏觀人格原型</em></div>
+          </div>
+          <div class="chart-connector">
+            <span>▲ Bidirectional Function Stack / 雙向功能堆疊 ▼</span>
+          </div>
+          <div class="chart-box func">
+            <div class="label">⚡ 8 Cognitive Dimensions / 8維認知功能</div>
+            <div class="desc">Dominant & Auxiliary Processing<br><em>主導與輔助資訊處理</em></div>
+          </div>
+        </div>
+
+        <!-- Start Actions -->
+        <div class="start-actions">
+          <button class="btn-primary" onclick="startQuiz('en')">
+            🚀 Start Test (English)
+          </button>
+          <button class="btn-primary" style="background-color: var(--accent-func);" onclick="startQuiz('zh')">
+            🚀 開始測試 (繁體中文)
+          </button>
+        </div>
+
+        <!-- Footer & Disclaimer -->
+        <footer>
+          <div class="resources-links">
+            <strong>📚 Resources / 參考資源:</strong>
+            <a href="https://www.psychologytoday.com" target="_blank" rel="noopener">Psychology Today</a> |
+            <a href="https://www.capt.org" target="_blank" rel="noopener">CAPT (MBTI Research)</a>
+          </div>
+          <div>
+            <strong>⚠️ Disclaimer / 聲明:</strong><br>
+            English: This assessment is based on Carl Jung's cognitive function theory for self-exploration purposes and is not a clinical diagnostic tool.<br>
+            繁體中文：本測試基於榮格認知功能理論設計，僅供自我探索與參考，非臨床心理診斷工具。
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    <!-- QUIZ PAGE -->
+    <div id="page-quiz" class="page">
+      <div class="card">
+        <!-- Progress Bar -->
+        <div class="progress-container">
+          <div class="progress-header">
+            <span id="question-tracker">Question 1 of 20</span>
+            <span id="progress-percent">0%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="progress-bar-fill" class="progress-bar-fill"></div>
+          </div>
+        </div>
+
+        <div style="margin-top: 1.5rem;">
+          <h2 id="question-text" class="question-title">Loading Question...</h2>
+          <div id="options-container" class="options-grid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3-SECOND LOADING / ANALYSIS PAGE -->
+    <div id="page-analysing" class="page">
+      <div class="card">
+        <div class="analysing-box">
+          <div class="scanner-ring"></div>
+          <div class="status-text" id="status-text">🔍 Analyzing cognitive responses...</div>
+          <div class="progress-container" style="width: 100%; max-width: 360px;">
+            <div class="progress-bar-bg">
+              <div id="scan-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT PAGE -->
+    <div id="page-result" class="page">
+      <div class="card">
+        <!-- Motion Emojis -->
+        <div class="emoji-container">
+          <span class="motion-emoji emoji-float" id="res-emoji-float">🌿</span>
+          <span class="motion-emoji emoji-pulse" id="res-emoji-pulse">🧠</span>
+          <span class="motion-emoji emoji-wave" id="res-emoji-wave">💡</span>
+        </div>
+
+        <div class="result-header">
+          <div class="result-badge">
+            <span id="res-mbti">INFP</span>
+            <span id="res-code" style="font-size: 1.1rem; color: var(--text-muted);">(Fi-Ne)</span>
+          </div>
+          <div id="res-title" style="font-size: 1.1rem; font-weight: 600;">Authentic Idealist / 追求真實的理想主義者</div>
+        </div>
+
+        <!-- Story & Narrative -->
+        <div class="section-title" id="lbl-narrative">Context & Mindset Story / 心理機制故事</div>
+        <p class="story-paragraph" id="res-story">...</p>
+
+        <!-- Analogy -->
+        <div class="section-title" id="lbl-analogy">Real-World Analogy / 現實生活比喻</div>
+        <div class="analogy-box" id="res-analogy">...</div>
+
+        <!-- Action Suggestions -->
+        <div class="section-title" id="lbl-suggestions">Action Suggestions / 個人成長建議</div>
+        <ul class="suggestions-list" id="res-suggestions"></ul>
+
+        <!-- Dimension Scores -->
+        <div style="margin-top: 1.5rem;">
+          <h3 style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;" id="lbl-scores">8 Dimension Breakdown Scores / 8維認知功能得分表</h3>
+          <div id="scores-container" class="scores-list"></div>
+        </div>
+
+        <div style="text-align: center; margin-top: 1.75rem;">
+          <button class="btn-primary" onclick="showPage('page-landing')">🔄 Retake Test / 重新測試</button>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+          <div class="resources-links">
+            <strong>📚 Resources / 參考資源:</strong>
+            <a href="https://www.psychologytoday.com" target="_blank" rel="noopener">Psychology Today</a> |
+            <a href="https://www.capt.org" target="_blank" rel="noopener">CAPT (MBTI Research)</a>
+          </div>
+          <div>
+            <strong>⚠️ Disclaimer / 聲明:</strong><br>
+            English: Results reflect preferences based on your answers for personal development.<br>
+            繁體中文：測試結果反映您當前回答的偏好傾向，供個人成長與心智機制的自我探索參考。
+          </div>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* --------------------------------------------------
+       1. 80-QUESTION LIBRARY (10 questions per function)
+       -------------------------------------------------- */
+    const questionLibrary = [
+      // Ni (10)
+      { f: "Ni", en: "I frequently experience strong intuitive hunches about future outcomes.", zh: "我經常對未來的發展趨勢有強烈的直覺預感。" },
+      { f: "Ni", en: "I synthesize complex ideas into a single, cohesive vision easily.", zh: "我擅長將複雜的思想歸納融合成一個核心願景。" },
+      { f: "Ni", en: "I focus on underlying meanings rather than surface-level facts.", zh: "比起表面事實，我更專注於背後隱含的深層意義。" },
+      { f: "Ni", en: "I often know the solution to a problem without knowing how I reached it.", zh: "我常在不清楚推導過程的情況下突然得知問題答案。" },
+      { f: "Ni", en: "I am drawn to symbolism, metaphors, and future possibilities.", zh: "我容易被象徵符號、隱喻及未來的可能性所吸引。" },
+      { f: "Ni", en: "I spend a lot of time internalizing concepts to find their core essence.", zh: "我花許多時間內化概念，以找出其最本質的精髓。" },
+      { f: "Ni", en: "I prefer long-term strategic visions over short-term plans.", zh: "比起短期計劃，我更傾向於長期戰略性的願景。" },
+      { f: "Ni", en: "I am guided by a clear internal vision of where things are heading.", zh: "指引我行動的是對事物發展走向的清晰內在圖景。" },
+      { f: "Ni", en: "I naturally filter out noise to uncover underlying universal truths.", zh: "我會自然地過濾雜音，以揭示背後通用的規律與真理。" },
+      { f: "Ni", en: "I often feel like I live in the future rather than the present.", zh: "我常覺得自己生活在未來的預想中，而非當下。" },
+
+      // Ne (10)
+      { f: "Ne", en: "I enjoy brainstorming endless novel possibilities and connections.", zh: "我熱衷於腦力激盪，發掘無窮的新奇可能性與關聯。" },
+      { f: "Ne", en: "I quickly jump from one topic or idea to another during conversations.", zh: "在對話中，我的思維常快速地從一個話題跳躍到另一個。" },
+      { f: "Ne", en: "I get excited by starting new projects, even if I don't finish them.", zh: "探索並啟動新項目總是讓我興奮，即使最後沒全部完成。" },
+      { f: "Ne", en: "I see potential and multiple alternatives in almost every situation.", zh: "我幾乎能在任何情境中看到潛在機會與多重替代方案。" },
+      { f: "Ne", en: "I love exploring 'what if' scenarios and theoretical possibilities.", zh: "我喜歡探討「如果...會怎樣」的設想與理論推演。" },
+      { f: "Ne", en: "I prefer keeping my options open rather than committing early.", zh: "我喜歡保持選擇的開放性，而不是過早做出定局。" },
+      { f: "Ne", en: "I easily combine concepts from completely unrelated fields.", zh: "我能輕鬆將來自完全無關領域的概念結合在一起。" },
+      { f: "Ne", en: "Routine and predictability quickly make me feel uninspired.", zh: "常規與可預測性會迅速讓我感到缺乏靈感與枯燥。" },
+      { f: "Ne", en: "I thrive when adapting to novel, unpredictable environments.", zh: "在充滿未知與新奇的環境中，我反而能發揮得更好。" },
+      { f: "Ne", en: "I generate ideas quickly and impulsively when inspired.", zh: "受到啟發時，我能迅速且源源不絕地提出新點子。" },
+
+      // Si (10)
+      { f: "Si", en: "I rely heavily on past experiences and proven traditions.", zh: "我高度依賴過去的經驗與經過考驗的傳統做法。" },
+      { f: "Si", en: "I pay precise attention to specific sensory details and facts.", zh: "我對具體的感官細節與客觀事實有精準的注意力。" },
+      { f: "Si", en: "I value routine, stability, and predictable structure in daily life.", zh: "我重視日常生活中的常規、穩定性與可預測的秩序。" },
+      { f: "Si", en: "I easily notice when something in my environment is modified or missing.", zh: "當周遭環境有任何微小改變或缺失時，我能敏銳察覺。" },
+      { f: "Si", en: "I prefer step-by-step instructions over vague guidance.", zh: "比起模糊的指導，我更喜歡按部就班的具體步驟。" },
+      { f: "Si", en: "I feel nostalgic and treasure meaningful personal memories deeply.", zh: "我非常懷舊，並深藏珍貴的個人回憶與過往經歷。" },
+      { f: "Si", en: "I compare current situations with past precedents to make choices.", zh: "我會將當前情況與過去的先例進行對比來做出抉擇。" },
+      { f: "Si", en: "I am practical, realistic, and careful with resources.", zh: "我是個務實、講求實際且審慎管理資源的人。" },
+      { f: "Si", en: "I feel comfortable following established procedures and routines.", zh: "遵循已建立的標準流程能讓我感到安心與高效率。" },
+      { f: "Si", en: "I respect duty, reliability, and foundational stability.", zh: "我尊敬責任心、可靠性以及維護基石的穩定。" },
+
+      // Se (10)
+      { f: "Se", en: "I am fully present in the moment, reacting quickly to surroundings.", zh: "我完全活在當下，對周遭環境的變化能迅速做出反應。" },
+      { f: "Se", en: "I enjoy tangible, hands-on sensory experiences (sports, arts, food).", zh: "我喜愛具體且直接的感官體驗（如運動、藝術、美食）。" },
+      { f: "Se", en: "I make decisions based on immediate physical realities rather than theories.", zh: "我根據當前眼前的物理現實而非抽象理論來做決策。" },
+      { f: "Se", en: "I adapt gracefully to sudden physical changes or emergencies.", zh: "面對突發的環境變化或緊急狀況，我能靈活適應與應變。" },
+      { f: "Se", en: "I love aesthetics, design, and vibrant physical environments.", zh: "我熱愛美學、設計以及充滿活力的實體環境。" },
+      { f: "Se", en: "I learn best by doing rather than reading or listening to theory.", zh: "通過親動手操作我的學習效果最好，而非閱讀理論。" },
+      { f: "Se", en: "I am naturally observant of physical environment details around me.", zh: "我對身邊環境的動態與物理細節有天然的觀察力。" },
+      { f: "Se", en: "I enjoy action-oriented activities with immediate visible results.", zh: "我喜歡行動導向且能立即看到具體成果的活動。" },
+      { f: "Se", en: "I trust what I can directly experience with my five senses.", zh: "我信任能通過五官直接感知到的真實事物。" },
+      { f: "Se", en: "I seek excitement, spontaneity, and real-world engagement.", zh: "我追求刺激、自發性以及與真實世界的直接互動。" },
+
+      // Ti (10)
+      { f: "Ti", en: "I seek internal logical consistency above almost everything else.", zh: "我追求內在邏輯的一致性，這高於幾乎其他一切。" },
+      { f: "Ti", en: "I analyze systems deeply to understand how every component works.", zh: "我喜歡深入分析系統，以釐清每個組件是如何運作的。" },
+      { f: "Ti", en: "I am quick to spot logical flaws, biases, or contradictions in arguments.", zh: "我能迅速指出論點中的邏輯漏洞、偏見或矛盾之處。" },
+      { f: "Ti", en: "I create precise definitions and mental models for abstract concepts.", zh: "我習慣為抽象概念建立精準的定義與內建邏輯模型。" },
+      { f: "Ti", en: "I value truth and precision over emotional social harmony.", zh: "比起情感上的表面和諧，我更看重事實真相與邏輯嚴謹。" },
+      { f: "Ti", en: "I prefer solving complex problems independently using logic.", zh: "我喜歡獨立運用邏輯推理來解決複雜棘手難題。" },
+      { f: "Ti", en: "I naturally deconstruct ideas to test their core structural validity.", zh: "我會自然地拆解概念，以檢驗其核心結構是否成立。" },
+      { f: "Ti", en: "I remain objective and detached when analyzing difficult issues.", zh: "在分析困難問題時，我能保持客觀超然的立場。" },
+      { f: "Ti", en: "I enjoy refining my personal understanding rather than imposing rules.", zh: "我專注於完善自身的認知模型，而非向外界強加規則。" },
+      { f: "Ti", en: "I question assumptions until I find the ultimate root logic.", zh: "我會不斷質疑前置假設，直到找到最根本的底層邏輯。" },
+
+      // Te (10)
+      { f: "Te", en: "I prioritize efficiency, structure, and measurable objective results.", zh: "我優先考慮效率、結構化流程以及可衡量的客觀結果。" },
+      { f: "Te", en: "I organize my external environment, plans, and tasks systematically.", zh: "我會系統化地組織外部環境、日程計劃與任務。" },
+      { f: "Te", en: "I make logical decisions quickly based on empirical data and facts.", zh: "我根據實證數據與客觀事實迅速做出明智決策。" },
+      { f: "Te", en: "I naturally take charge to streamline operations and complete goals.", zh: "我會自然主導局勢，以簡化流程並高效達成目標。" },
+      { f: "Te", en: "I value clear rules, metrics, procedures, and accountability.", zh: "我重視明確的規則、評估指標、作業程序與責任歸屬。" },
+      { f: "Te", en: "I prefer direct, pragmatic communication that gets to the point.", zh: "我偏好直截了當、切中要害且務實的溝通方式。" },
+      { f: "Te", en: "I judge theories by their practical applicability and real utility.", zh: "我根據理論的實用性與實際價值來評估其好壞。" },
+      { f: "Te", en: "I delegate tasks effectively to optimize productivity.", zh: "我能有效分派任務，以實現團隊整體生產力最大化。" },
+      { f: "Te", en: "I get frustrated by disorganization, wastefulness, and inefficiency.", zh: "混亂無序、資源浪費與低效率會讓我感到相當煩躁。" },
+      { f: "Te", en: "I value productivity and objective standards of performance.", zh: "我看重生產力以及客觀統一的績效評估標準。" },
+
+      // Fi (10)
+      { f: "Fi", en: "I am guided by a deep internal compass of personal ethics and values.", zh: "指引我行動的是深藏於內心的個人道德與價值觀指南針。" },
+      { f: "Fi", en: "Authenticity is essential to me; I must stay true to myself.", zh: "「真實」對我至關重要；我必須對自己的內心保持真實。" },
+      { f: "Fi", en: "I feel intense personal empathy for individuals and marginalized causes.", zh: "我對個體及弱勢群體抱有強烈且深沉的共情能力。" },
+      { f: "Fi", en: "I evaluate situations based on how they align with my core beliefs.", zh: "我根據事物是否契合我的核心信念來對其進行評估。" },
+      { f: "Fi", en: "I keep my deepest emotions private rather than expressing them openly.", zh: "我傾向於私下消化深層情感，而非向外界公開流露。" },
+      { f: "Fi", en: "I resist external pressure to conform to values I don't agree with.", zh: "我會堅決抵抗外界壓力，絕不從眾於我不認同的價值觀。" },
+      { f: "Fi", en: "I seek personal meaning and passion in everything I undertake.", zh: "我追求在我所從事的每件事中找到個人意義與熱情。" },
+      { f: "Fi", en: "I respect individuality and the right for everyone to be unique.", zh: "我非常尊重個體獨特性以及每個人做自己的權利。" },
+      { f: "Fi", en: "I judge actions by the purity of their intent and personal integrity.", zh: "我根據動機的純粹性與個人正直程度來衡量行為。" },
+      { f: "Fi", en: "I am highly sensitive to subtle internal emotional nuances.", zh: "我對自己內心微妙的情感波動與變化非常敏銳。" },
+
+      // Fe (10)
+      { f: "Fe", en: "I naturally tune into the feelings and emotional needs of others.", zh: "我能自然地察覺並融入他人的情緒波動與需求。" },
+      { f: "Fe", en: "I prioritize social harmony, group cohesion, and peace.", zh: "我優先維護社會和諧、團隊凝聚力與群體平靜。" },
+      { f: "Fe", en: "I adjust my behavior to help others feel comfortable and included.", zh: "我會調整自己的舉止，讓身邊的人感到舒適與被包含。" },
+      { f: "Fe", en: "I express warmth, encouragement, and empathy openly in groups.", zh: "我能在群體中公開表達溫暖、鼓勵與同理心。" },
+      { f: "Fe", en: "I feel responsible for maintaining morale and connection around me.", zh: "我覺得自己有責任維護周遭氛圍的士氣與人際連結。" },
+      { f: "Fe", en: "I value social etiquette, tactful manners, and cultural norms.", zh: "我重視社交禮儀、圓融的溝通技巧以及文化規範。" },
+      { f: "Fe", en: "I make choices that benefit the collective well-being of the group.", zh: "我做出的選擇旨在促進團隊整體的共同利益。" },
+      { f: "Fe", en: "I easily mirror emotional energy to connect with people.", zh: "我能輕鬆映照情感能量，從而迅速與他人建立連結。" },
+      { f: "Fe", en: "I feel distressed when there is interpersonal conflict or tension.", zh: "當人際間出現衝突或緊張氣氛時，會讓我感到困擾。" },
+      { f: "Fe", en: "I seek validation and shared emotional connection with others.", zh: "我追求與他人建立共鳴並共享情感連結。" }
+    ];
+
+    /* --------------------------------------------------
+       2. TYPE MAPPINGS WITH DETAILED ANALYSIS & SUGGESTIONS
+       -------------------------------------------------- */
+    const typeMapping = {
+      "INFP": {
+        code: "Fi-Ne", title_en: "Authentic Idealist", title_zh: "追求真實的理想主義者", emoji: "🌿",
+        story_en: "You are driven by an internal moral compass (Fi) that constantly seeks deep, authentic meaning. When presented with choices, your Ne secondary engine generates creative possibilities that honor your core values.",
+        story_zh: "你由內在強烈的道德指南針（Fi）所驅動，不斷尋求深層與真實的意義。面對選擇時，你的輔助功能（Ne）會源源不絕地產生富有創意的可能性，同時忠於你的內心價值。",
+        analogy_en: "'The Dedicated Lighthouse Keeper': You stand firmly on your internal ethical rock, sending out intuitive beams of light to guide others through emotional storms.",
+        analogy_zh: "「堅守陣地的燈塔守護者」：你堅定地站在內心倫理的礁石上，向外射出靈感的直覺光芒，指引他人度過情感的風浪。",
+        sugg_en: ["Set gentle boundries to protect your emotional energy.", "Translate your rich inner ideas into real-world tangible artifacts.", "Practice externalizing your thoughts through writing or artistic creation."],
+        sugg_zh: ["建立溫和而堅定的界線，保護你的情感精力。", "將豐富的內在靈感轉化為現實中可觸摸的實體成果。", "練習透過寫作或藝術創作將想法外化與他人分享。"]
+      },
+      "INTJ": {
+        code: "Ni-Te", title_en: "Strategic Visionary", title_zh: "戰略遠見者", emoji: "🎯",
+        story_en: "Your dominant Ni synthesizes future trends into a clear, unified master plan. Your auxiliary Te acts as an efficient engine, structuring the outer world to execute your long-range vision systematically.",
+        story_zh: "你的主導功能（Ni）將未來的趨勢歸納為清晰而統一的全局藍圖；輔助功能（Te）則是高效的執行引擎，系統化地組織外部世界以實施你的長遠戰略。",
+        analogy_en: "'The Chess Grandmaster': You visualize ten moves ahead, designing structured pathways to ensure ultimate tactical efficiency.",
+        analogy_zh: "「西洋棋特級大師」：你能預判十步之外的局勢，並設計出結構嚴密的步局，以確保最終戰略效率極大化。",
+        sugg_en: ["Allow room for unexpected pivot opportunities in your master plans.", "Practice active patience when communicating complex blueprints to team members.", "Acknowledge the emotional factors in decision-making processes."],
+        sugg_zh: ["在宏大計劃中預留應對突發變化的彈性空間。", "向團隊傳達複雜藍圖時，保持積極的耐心與溝通。", "在決策過程中主動納入情感與人際因素的考量。"]
+      },
+      "INTP": {
+        code: "Ti-Ne", title_en: "Analytical Conceptualizer", title_zh: "分析型概念家", emoji: "🧩",
+        story_en: "Your dominant Ti builds intricate internal logic models, dissecting ideas down to fundamental truths. Your auxiliary Ne supplies endless theoretical concepts and speculative connections.",
+        story_zh: "你的主導功能（Ti）構建著極其精密的內在邏輯模型，將概念拆解至最根本的真理；輔助功能（Ne）則提供源源不絕的理論假說與多維關聯。",
+        analogy_en: "'The Master Clockmaker': You take apart every idea's gear mechanism to inspect how it works, refining internal theoretical structures with surgical precision.",
+        analogy_zh: "「精密的鐘錶匠」：你拆解每個想法的齒輪結構以檢視其運作原理，並以外科手術般的精準度修飾內在理論體系。",
+        sugg_en: ["Set realistic execution deadlines to prevent analysis paralysis.", "Share draft ideas with others before achieving complete internal perfection.", "Engage in physical hands-on activities to balance abstract thinking."],
+        sugg_zh: ["設定務實的執行截止日期，避免陷入「過度分析癱瘓」。", "在構想達到完美之前，嘗試主動向外分享草案。", "參與具體的實體活動，以平衡過度的抽象思維。"]
+      },
+      "INFJ": {
+        code: "Ni-Fe", title_en: "Insightful Counselor", title_zh: "具洞察力的諮商者", emoji: "🛡️",
+        story_en: "Your dominant Ni yields profound intuitive realizations about future human trajectories. Your auxiliary Fe channels these insights into compassionate action, fostering harmony and human growth.",
+        story_zh: "你的主導功能（Ni）對人類未來的發展軌跡有著深刻的直覺洞察；輔助功能（Fe）則將這些洞察轉化為具同理心的行動，促進團隊和諧與個人成長。",
+        analogy_en: "'The Quiet Navigator': You sense shifts in human currents long before they reach the shore, guiding others toward personal transformation with soft wisdom.",
+        analogy_zh: "「深邃的航海導師」：你在暗湧抵達海岸前很久便已察覺人心變化，以柔和的智慧指引他人進行自我蛻變。",
+        sugg_en: ["Schedule mandatory quiet time to replenish your cognitive batteries.", "Differentiate your own emotions from the stress absorbed from others.", "Express your needs directly without expecting others to intuitively guess them."],
+        sugg_zh: ["安排定期的獨處時間，為你的認知能量充電。", "學會區分自己的真實情緒與吸收自他人的壓力。", "直接表達自身需求，避免期待他人能全憑直覺猜中。"]
+      },
+      "ENTP": {
+        code: "Ne-Ti", title_en: "Innovative Debater", title_zh: "創新辯論家", emoji: "⚡",
+        story_en: "Your dominant Ne rapidly sparks dynamic new ideas and connections across disparate domains. Your auxiliary Ti analyzes these theories against a sharp internal logical framework to filter out viable models.",
+        story_zh: "你的主導功能（Ne）能快速在不同領域間擦出動態想法與新奇關聯；輔助功能（Ti）則運用犀利的內在邏輯框架分析這些理論，篩選出可行的模型。",
+        analogy_en: "'The Spark Generator': You collide opposing concepts together to ignite brilliant breakthroughs, constantly testing structural boundaries.",
+        analogy_zh: "「創意火花發生器」：你讓相互對立的概念碰撞，從而點燃突破性的靈感，並不斷挑戰傳統結構的邊界。",
+        sugg_en: ["Commit to seeing high-priority projects through to complete implementation.", "Recognize when debating ideas might overwhelm more sensitive collaborators.", "Establish routine systems to manage practical day-to-day administrative details."],
+        sugg_zh: ["承諾並堅持將高優先級的項目貫徹執行至最終落實。", "意識到過度辯論可能對較為敏感的合作夥伴造成壓力。", "建立規律的系統來處理日常具體的行政細節。"]
+      },
+      "ENFP": {
+        code: "Ne-Fi", title_en: "Inspiring Explorer", title_zh: "充滿靈感的探索者", emoji: "🌊",
+        story_en: "Your dominant Ne naturally sees vast networks of potential and inspiring futures. Your auxiliary Fi grounds these creative ventures in deeply felt personal ethics and authentic passion.",
+        story_zh: "你的主導功能（Ne）能天然看到無限的潛力網絡與令人振奮的未來；輔助功（Fi）則將這些創意冒險扎根於真摯的個人道德信念與熱情之中。",
+        analogy_en: "'The Wind in the Sails': You bring infectious energy and fresh direction to stagnant situations, inspiring people to explore uncharted territories.",
+        analogy_zh: "「揚帆的迎風勁吹」：你為停滯不前的局勢注入具感染力的能量與全新方向，激勵他人探索未知的領域。",
+        sugg_en: ["Prioritize your top ideas rather than pursuing every exciting spark.", "Develop structured habits to maintain long-term focus on key targets.", "Build grounding routines to manage sensory energy levels."],
+        sugg_zh: ["學會為你的點子排序，而非同時追求每個令人興奮的火花。", "養成結構化的習慣，保持對核心目標的長期專注。", "建立穩固的生活規律以有效調配感官能量。"]
+      },
+      "ENTJ": {
+        code: "Te-Ni", title_en: "Decisive Commander", title_zh: "果斷的指揮官", emoji: "🚀",
+        story_en: "Your dominant Te drives relentless operational efficiency and structured progress. Your auxiliary Ni supports your leadership with long-range strategic vision and predictive foresight.",
+        story_zh: "你的主導功能（Te）追求不懈的營運效率與結構化推進；輔助功能（Ni）則以長遠的戰略遠見與前瞻預測，為你的領導力提供深層支撐。",
+        analogy_en: "'The Master Architect of Systems': You transform chaotic environments into streamlined, high-performing structures designed for long-term scalability.",
+        analogy_zh: "「系統的總建築師」：你將混亂無序的環境重組為高效、流暢且具備長期擴展能力的卓越結構。",
+        sugg_en: ["Practice active listening to incorporate valuable qualitative input.", "Praise process improvements and individual effort, not just bottom-line goals.", "Balance high drive with intentional periods of rest to avoid burnout."],
+        sugg_zh: ["練習積極傾聽，以吸納具有價值的質化意見。", "讚賞過程中的進步與個人努力，而非僅關注最終指標。", "在強大的推進力與主動休息之間取得平衡，避免過勞。"]
+      },
+      "ENFJ": {
+        code: "Fe-Ni", title_en: "Empathetic Catalyst", title_zh: "具共情力的催化劑", emoji: "🔥",
+        story_en: "Your dominant Fe tunes into collective emotions and social needs effortlessly. Your auxiliary Ni gives you deep visionary insight into how to catalyze human potential for long-term growth.",
+        story_zh: "你的主導功能（Fe）能輕鬆融入集體情感與社交需求；輔助功能（Ni）則為你提供深刻的遠見，懂得如何催化人類潛能以實現長期成長。",
+        analogy_en: "'The Orchestrator of Harmony': You bring out the unique resonance in every individual, harmonizing diverse voices into a powerful collective movement.",
+        analogy_zh: "「和諧交響樂的指揮家」：你能發掘每個人獨特的共鳴，將多元的聲音和諧地凝聚成強大的集體力量。",
+        sugg_en: ["Ensure your own well-being is prioritized alongside helping others.", "Accept that constructive conflict is sometimes necessary for growth.", "Avoid over-extending your personal commitments."],
+        sugg_zh: ["在關懷他人的同時，確保將自己的身心健康放在優先位置。", "接納建設性的衝突有時是促進真實成長的必要過程。", "避免過度承諾而導致精力透支。"]
+      }
+    };
+
+    /* --------------------------------------------------
+       3. STATE MANAGEMENT & LOGIC
+       -------------------------------------------------- */
+    let currentLang = "en";
+    let activeQuestions = [];
+    let currentIdx = 0;
+    let functionScores = { Ni:0, Ne:0, Si:0, Se:0, Ti:0, Te:0, Fi:0, Fe:0 };
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const newTheme = html.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      html.setAttribute("data-theme", newTheme);
+    }
+
+    function showPage(pageId) {
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      document.getElementById(pageId).classList.add("active");
+      window.scrollTo(0,0);
+    }
+
+    function shuffleArray(arr) {
+      const array = [...arr];
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function startQuiz(lang) {
+      currentLang = lang;
+      functionScores = { Ni:0, Ne:0, Si:0, Se:0, Ti:0, Te:0, Fi:0, Fe:0 };
+      currentIdx = 0;
+
+      // Randomly pick 20 questions from the 80-question library
+      const shuffled = shuffleArray(questionLibrary);
+      activeQuestions = shuffled.slice(0, 20);
+
+      showPage("page-quiz");
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const q = activeQuestions[currentIdx];
+      const total = activeQuestions.length;
+      const percent = Math.round((currentIdx / total) * 100);
+
+      document.getElementById("question-tracker").textContent = 
+        currentLang === "zh" ? `第 ${currentIdx + 1} 題（共 ${total} 題）` : `Question ${currentIdx + 1} of ${total}`;
+      
+      document.getElementById("progress-percent").textContent = `${percent}%`;
+      document.getElementById("progress-bar-fill").style.width = `${percent}%`;
+
+      document.getElementById("question-text").textContent = currentLang === "zh" ? q.zh : q.en;
+
+      const optionsContainer = document.getElementById("options-container");
+      optionsContainer.innerHTML = "";
+
+      const options = currentLang === "zh" ? [
+        { label: "非常符合", pts: 3 },
+        { label: "比較符合", pts: 2 },
+        { label: "稍微符合", pts: 1 },
+        { label: "不太符合 / 不符合", pts: 0 }
+      ] : [
+        { label: "Strongly Agree", pts: 3 },
+        { label: "Agree", pts: 2 },
+        { label: "Slightly Agree", pts: 1 },
+        { label: "Disagree", pts: 0 }
+      ];
+
+      options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.className = "option-btn";
+        btn.innerHTML = `<span>${opt.label}</span> <span>➔</span>`;
+        btn.onclick = () => selectOption(q.f, opt.pts);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function selectOption(funcKey, points) {
+      functionScores[funcKey] += points;
+      currentIdx++;
+
+      if (currentIdx < activeQuestions.length) {
+        renderQuestion();
+      } else {
+        run3SecondAnalysis();
+      }
+    }
+
+    /* 3-Second Loading Effect before Showing Result */
+    function run3SecondAnalysis() {
+      showPage("page-analysing");
+      
+      const scanBar = document.getElementById("scan-bar-fill");
+      const statusText = document.getElementById("status-text");
+
+      const phrases = currentLang === "zh" ? [
+        "🔍 正在掃描8維認知功能回應...",
+        "⚡ 正在評估主導與輔助心智架構...",
+        "🧩 正在生成個性化心理故事與成長建議..."
+      ] : [
+        "🔍 Scanning 8-dimension cognitive responses...",
+        "⚡ Evaluating dominant & auxiliary stack...",
+        "🧩 Compiling narrative analysis & suggestions..."
+      ];
+
+      let elapsed = 0;
+      const total = 3000;
+      const intervalTime = 50;
+
+      const timer = setInterval(() => {
+        elapsed += intervalTime;
+        const progress = Math.min((elapsed / total) * 100, 100);
+        scanBar.style.width = `${progress}%`;
+
+        if (elapsed >= 2000) {
+          statusText.textContent = phrases[2];
+        } else if (elapsed >= 1000) {
+          statusText.textContent = phrases[1];
+        } else {
+          statusText.textContent = phrases[0];
+        }
+
+        if (elapsed >= total) {
+          clearInterval(timer);
+          calculateAndDisplayResults();
+          showPage("page-result");
+        }
+      }, intervalTime);
+    }
+
+    function calculateAndDisplayResults() {
+      // 4-letter calculation logic
+      const eScore = functionScores.Ne + functionScores.Se + functionScores.Te + functionScores.Fe;
+      const iScore = functionScores.Ni + functionScores.Si + functionScores.Ti + functionScores.Fi;
+      const letter1 = eScore >= iScore ? "E" : "I";
+
+      const nScore = functionScores.Ni + functionScores.Ne;
+      const sScore = functionScores.Si + functionScores.Se;
+      const letter2 = nScore >= sScore ? "N" : "S";
+
+      const tScore = functionScores.Ti + functionScores.Te;
+      const fScore = functionScores.Fi + functionScores.Fe;
+      const letter3 = tScore >= fScore ? "T" : "F";
+
+      const jScore = functionScores.Te + functionScores.Fe + functionScores.Ni + functionScores.Si;
+      const pScore = functionScores.Ti + functionScores.Fi + functionScores.Ne + functionScores.Se;
+      const letter4 = jScore >= pScore ? "J" : "P";
+
+      const mbti = `${letter1}${letter2}${letter3}${letter4}`;
+      const data = typeMapping[mbti] || typeMapping["INFP"];
+
+      // Update Result Elements
+      document.getElementById("res-mbti").textContent = mbti;
+      document.getElementById("res-code").textContent = `(${data.code})`;
+      document.getElementById("res-title").textContent = currentLang === "zh" ? data.title_zh : data.title_en;
+
+      // Dynamic Motion Emojis
+      document.getElementById("res-emoji-float").textContent = data.emoji;
+
+      // Dynamic Labels
+      document.getElementById("lbl-narrative").textContent = currentLang === "zh" ? "心理機制故事與情境" : "Context & Mindset Story";
+      document.getElementById("lbl-analogy").textContent = currentLang === "zh" ? "現實生活比喻" : "Real-World Analogy";
+      document.getElementById("lbl-suggestions").textContent = currentLang === "zh" ? "個人成長與行動建議" : "Action Suggestions";
+
+      // Populate Story, Analogy, and Suggestions
+      document.getElementById("res-story").textContent = currentLang === "zh" ? data.story_zh : data.story_en;
+      document.getElementById("res-analogy").textContent = currentLang === "zh" ? data.analogy_zh : data.analogy_en;
+
+      const suggList = document.getElementById("res-suggestions");
+      suggList.innerHTML = "";
+      const items = currentLang === "zh" ? data.sugg_zh : data.sugg_en;
+      items.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        suggList.appendChild(li);
+      });
+
+      // Render 8 scores breakdown
+      const scoresContainer = document.getElementById("scores-container");
+      scoresContainer.innerHTML = "";
+      Object.keys(functionScores).forEach(f => {
+        const chip = document.createElement("div");
+        chip.className = "score-chip";
+        chip.innerHTML = `<span><strong>${f}</strong></span> <span>${functionScores[f]} pts</span>`;
+        scoresContainer.appendChild(chip);
+      });
+    }
+  </script>
+</body>
+</html>
