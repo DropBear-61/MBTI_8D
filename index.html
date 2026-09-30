@@ -258,7 +258,7 @@
       border-color: var(--accent-mbti);
     }
 
-    /* 3-Second Loading Scanner Page */
+    /* Loading Scanner Page */
     .analysing-box {
       display: flex;
       flex-direction: column;
@@ -291,12 +291,12 @@
       min-height: 1.5em;
     }
 
-    /* Dynamic Motion Emojis */
+    /* Motion Emojis */
     .emoji-container {
       display: flex;
       justify-content: center;
       gap: 1.5rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
     }
 
     .motion-emoji {
@@ -324,6 +324,55 @@
       40% { transform: rotate(-8deg); }
       60% { transform: rotate(14deg); }
       80% { transform: rotate(-4deg); }
+    }
+
+    /* Famous Figures & Recommendation Grid */
+    .figures-grid, .rec-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .figure-card, .rec-card {
+      background: var(--badge-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .figure-card .cat, .rec-card .cat {
+      font-size: 0.75rem;
+      color: var(--accent-mbti);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .figure-card .name, .rec-card .name {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .figure-card .desc, .rec-card .desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Rationale / Reason Box */
+    .reason-box {
+      background: var(--badge-bg);
+      border: 1px solid var(--card-border);
+      border-left: 4px solid var(--accent-highlight);
+      padding: 1rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text-main);
+      margin-top: 0.5rem;
     }
 
     /* Detailed Result Elements */
@@ -535,9 +584,9 @@
     <!-- RESULT PAGE -->
     <div id="page-result" class="page">
       <div class="card">
-        <!-- Motion Emojis -->
+        <!-- Motion Emojis Top -->
         <div class="emoji-container">
-          <span class="motion-emoji emoji-float" id="res-emoji-float">🌿</span>
+          <span class="motion-emoji emoji-float" id="res-emoji-float">✨</span>
           <span class="motion-emoji emoji-pulse" id="res-emoji-pulse">🧠</span>
           <span class="motion-emoji emoji-wave" id="res-emoji-wave">💡</span>
         </div>
@@ -557,6 +606,18 @@
         <!-- Analogy -->
         <div class="section-title" id="lbl-analogy">Real-World Analogy / 現實生活比喻</div>
         <div class="analogy-box" id="res-analogy">...</div>
+
+        <!-- Famous Examples & Characters -->
+        <div class="section-title" id="lbl-figures">Representative Examples / 代表人物與角色</div>
+        <div class="figures-grid" id="res-figures"></div>
+
+        <!-- Suggested Occupations & Hobbies -->
+        <div class="section-title" id="lbl-recs">Suggested Career & Hobbies / 推薦職業與興趣</div>
+        <div class="rec-grid" id="res-recs"></div>
+
+        <!-- Rationale / Reason for Recommendations -->
+        <div class="section-title" id="lbl-reason">Recommendation Rationale / 推薦理由與心智機制對應</div>
+        <div class="reason-box" id="res-reason">...</div>
 
         <!-- Action Suggestions -->
         <div class="section-title" id="lbl-suggestions">Action Suggestions / 個人成長建議</div>
@@ -692,80 +753,168 @@
     ];
 
     /* --------------------------------------------------
-       2. TYPE MAPPINGS WITH DETAILED ANALYSIS & SUGGESTIONS
+       2. TYPE MAPPINGS WITH CELEBRITY / MOVIE EXAMPLES, CAREERS, HOBBIES & RATIONALE
        -------------------------------------------------- */
     const typeMapping = {
       "INFP": {
         code: "Fi-Ne", title_en: "Authentic Idealist", title_zh: "追求真實的理想主義者", emoji: "🌿",
-        story_en: "You are driven by an internal moral compass (Fi) that constantly seeks deep, authentic meaning. When presented with choices, your Ne secondary engine generates creative possibilities that honor your core values.",
-        story_zh: "你由內在強烈的道德指南針（Fi）所驅動，不斷尋求深層與真實的意義。面對選擇時，你的輔助功能（Ne）會源源不絕地產生富有創意的可能性，同時忠於你的內心價值。",
-        analogy_en: "'The Dedicated Lighthouse Keeper': You stand firmly on your internal ethical rock, sending out intuitive beams of light to guide others through emotional storms.",
+        story_en: "You are driven by an internal moral compass (Fi) that constantly seeks deep, authentic meaning. Your secondary Ne generates creative possibilities that honor your core values.",
+        story_zh: "你由內在強烈的道德指南針（Fi）所驅動，不斷尋求深層與真實的意義。你的輔助功能（Ne）會源源不絕地產生富有創意的可能性，同時忠於你的內心價值。",
+        analogy_en: "'The Dedicated Lighthouse Keeper': Standing firmly on your internal ethical rock, sending out intuitive beams of light to guide others through emotional storms.",
         analogy_zh: "「堅守陣地的燈塔守護者」：你堅定地站在內心倫理的礁石上，向外射出靈感的直覺光芒，指引他人度過情感的風浪。",
-        sugg_en: ["Set gentle boundries to protect your emotional energy.", "Translate your rich inner ideas into real-world tangible artifacts.", "Practice externalizing your thoughts through writing or artistic creation."],
+        figures: [
+          { cat_en: "Movie Character", cat_zh: "電影角色", name_en: "Frodo Baggins", name_zh: "佛羅多·巴金斯", desc_en: "The Lord of the Rings", desc_zh: "《指環王》" },
+          { cat_en: "Comic / Anime", cat_zh: "動漫角色", name_en: "Alphonse Elric", name_zh: "阿爾馮斯·艾力克", desc_en: "Fullmetal Alchemist", desc_zh: "《鋼之鍊金術師》" },
+          { cat_en: "Public Celebrity", cat_zh: "知名公眾人物", name_en: "J.R.R. Tolkien / Keanu Reeves", name_zh: "托爾金 / 基努·里維斯", desc_en: "Author & Actor", desc_zh: "文學家與知名演員" }
+        ],
+        recs: [
+          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Creative Writing, Counseling, Art Curation, ESG / NGO Value Management", name_zh: "創意寫作、心理諮商、文化藝術策展、公益/非營利組織、ESG永續發展" },
+          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Creative Journaling, Film Photography, Solo Hiking, Stargazing, Indie Music", name_zh: "獨立寫作與日誌、膠片攝影、獨自徒步探索、觀星、獨立音樂創作" }
+        ],
+        reason_en: "Why these recommendations fit: Your dominant Fi demands strong alignment with personal values and emotional authenticity, while auxiliary Ne thrives when given creative autonomy. Career paths in writing, counseling, or non-profits allow you to express core human values without rigid bureaucratic constraints. Hobbies like photography, stargazing, and solo nature walks provide low-pressure outlets for reflection, aesthetic expression, and imaginative exploration.",
+        reason_zh: "推薦理由與心智機制對應：主導功能內傾情感（Fi）使你高度重視個體價值與真實性，輔助功能外傾直覺（Ne）則渴望豐富的創意空間。因此，文學創作、心理諮商或文化/公益領域能讓你發揮同理心與獨特視角，且不受僵化體制束縛；而膠片攝影、觀星或戶外徒步等興趣，則能為你提供無壓力的內心獨白空間，沉澱並轉化靈感。",
+        sugg_en: ["Set gentle boundaries to protect your emotional energy.", "Translate your rich inner ideas into real-world tangible artifacts.", "Practice externalizing your thoughts through writing or artistic creation."],
         sugg_zh: ["建立溫和而堅定的界線，保護你的情感精力。", "將豐富的內在靈感轉化為現實中可觸摸的實體成果。", "練習透過寫作或藝術創作將想法外化與他人分享。"]
       },
       "INTJ": {
         code: "Ni-Te", title_en: "Strategic Visionary", title_zh: "戰略遠見者", emoji: "🎯",
-        story_en: "Your dominant Ni synthesizes future trends into a clear, unified master plan. Your auxiliary Te acts as an efficient engine, structuring the outer world to execute your long-range vision systematically.",
+        story_en: "Your dominant Ni synthesizes future trends into a clear, unified master plan. Your auxiliary Te acts as an efficient engine, structuring the outer world systematically.",
         story_zh: "你的主導功能（Ni）將未來的趨勢歸納為清晰而統一的全局藍圖；輔助功能（Te）則是高效的執行引擎，系統化地組織外部世界以實施你的長遠戰略。",
         analogy_en: "'The Chess Grandmaster': You visualize ten moves ahead, designing structured pathways to ensure ultimate tactical efficiency.",
         analogy_zh: "「西洋棋特級大師」：你能預判十步之外的局勢，並設計出結構嚴密的步局，以確保最終戰略效率極大化。",
-        sugg_en: ["Allow room for unexpected pivot opportunities in your master plans.", "Practice active patience when communicating complex blueprints to team members.", "Acknowledge the emotional factors in decision-making processes."],
+        figures: [
+          { cat_en: "Movie Character", cat_zh: "電影角色", name_en: "Batman / Bruce Wayne", name_zh: "蝙蝠俠 / 布魯斯·韋恩", desc_en: "The Dark Knight", desc_zh: "《蝙蝠俠》" },
+          { cat_en: "Comic / Anime", cat_zh: "動漫角色", name_en: "Lelouch vi Britannia", name_zh: "魯路修", desc_en: "Code Geass", desc_zh: "《反叛的魯路修》" },
+          { cat_en: "Public Celebrity", cat_zh: "知名公眾人物", name_en: "Elon Musk / Christopher Nolan", name_zh: "伊隆·馬斯克 / 克里斯多福·諾蘭", desc_en: "Tech Leader & Film Director", desc_zh: "科技領袖與著名導演" }
+        ],
+        recs: [
+          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Strategic Planning, Systems Architecture, Management Consulting, R&D Leadership", name_zh: "企業戰略規劃、系統架構師、管理諮詢、科技研發管理、金融分析" },
+          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Strategy Board Games (Chess, Go), Coding Projects, System Optimization, Archery", name_zh: "深度策略棋類（圍棋、西洋棋）、個人程式專案開發、個人數位工作流優化、射箭" }
+        ],
+        reason_en: "Why these recommendations fit: Your dominant Ni seeks long-term overarching visions, supported by auxiliary Te's drive for efficiency and measurable structure. You naturally excel in high-level strategy, systems design, and architecture where you can solve complex macroeconomic or structural puzzles. Hobbies involving tactical foresight, game theory, or coding satisfy your desire for intellectual challenge and internal mastery.",
+        reason_zh: "推薦理由與心智機制對應：主導功能內傾直覺（Ni）賦予你宏觀的前瞻與規律歸納能力，輔助功能外傾思考（Te）則提供系統化的落實與結構構造能力。因此，戰略規劃、系統架構與研發管理領域最能展現你構建長遠藍圖的優勢；而圍棋、專案開發或箭術等興趣，則能完美滿足你對邏輯深度、控局感與極致效率的追求。",
+        sugg_en: ["Allow room for unexpected pivot opportunities in your master plans.", "Practice active patience when communicating complex blueprints.", "Acknowledge emotional factors in decision-making."],
         sugg_zh: ["在宏大計劃中預留應對突發變化的彈性空間。", "向團隊傳達複雜藍圖時，保持積極的耐心與溝通。", "在決策過程中主動納入情感與人際因素的考量。"]
       },
       "INTP": {
         code: "Ti-Ne", title_en: "Analytical Conceptualizer", title_zh: "分析型概念家", emoji: "🧩",
-        story_en: "Your dominant Ti builds intricate internal logic models, dissecting ideas down to fundamental truths. Your auxiliary Ne supplies endless theoretical concepts and speculative connections.",
+        story_en: "Your dominant Ti builds intricate internal logic models, dissecting ideas down to fundamental truths. Your auxiliary Ne supplies endless theoretical concepts.",
         story_zh: "你的主導功能（Ti）構建著極其精密的內在邏輯模型，將概念拆解至最根本的真理；輔助功能（Ne）則提供源源不絕的理論假說與多維關聯。",
-        analogy_en: "'The Master Clockmaker': You take apart every idea's gear mechanism to inspect how it works, refining internal theoretical structures with surgical precision.",
+        analogy_en: "'The Master Clockmaker': Taking apart every idea's gear mechanism to inspect how it works, refining internal models with surgical precision.",
         analogy_zh: "「精密的鐘錶匠」：你拆解每個想法的齒輪結構以檢視其運作原理，並以外科手術般的精準度修飾內在理論體系。",
-        sugg_en: ["Set realistic execution deadlines to prevent analysis paralysis.", "Share draft ideas with others before achieving complete internal perfection.", "Engage in physical hands-on activities to balance abstract thinking."],
-        sugg_zh: ["設定務實的執行截止日期，避免陷入「過度分析癱瘓」。", "在構想達到完美之前，嘗試主動向外分享草案。", "參與具體的實體活動，以平衡過度的抽象思維。"]
+        figures: [
+          { cat_en: "Movie Character", cat_zh: "電影角色", name_en: "Sherlock Holmes", name_zh: "夏洛克·福爾摩斯", desc_en: "Sherlock", desc_zh: "《福爾摩斯探案》" },
+          { cat_en: "Comic / Anime", cat_zh: "動漫角色", name_en: "L Lawliet", name_zh: "L (龍崎)", desc_en: "Death Note", desc_zh: "《死亡筆記本》" },
+          { cat_en: "Public Celebrity", cat_zh: "知名公眾人物", name_en: "Albert Einstein / Bill Gates", name_zh: "愛因斯坦 / 比爾·蓋茲", desc_en: "Physicist & Tech Visionary", desc_zh: "物理學家與科技先驅" }
+        ],
+        sugg_en: ["Set realistic execution deadlines to prevent analysis paralysis.", "Share draft ideas with others before achieving total internal perfection.", "Engage in physical hands-on activities to balance abstract thinking."],
+        sugg_zh: ["設定務實的執行截止日期，避免陷入「過度分析癱瘓」。", "在構想達到完美之前，嘗試主動向外分享草案。", "參與具體的實體活動，以平衡過度的抽象思維。"],
+        recs: [
+          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Software Engineering, Theoretical Physics, Data Science, Philosophy / Research", name_zh: "軟體架構與算法研發、理論物理/數學研究、數據科學、哲學/學術研究" },
+          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Hardware Modding, Puzzle Solving, Astronomy, World-Building Game Design", name_zh: "硬體/軟體拆解改造、高難度解謎遊戲、業餘天文觀測、虛擬世界架構與遊戲設計" }
+        ],
+        reason_en: "Why these recommendations fit: Dominant Ti craves total logical precision and deep theoretical consistency, while auxiliary Ne enjoys exploring dynamic possibilities. Environments in tech architecture, scientific research, and data modeling allow you to deconstruct problems to first principles without being coerced into rigid compliance. Hobbies like modding, astronomy, or puzzle solving give your mind a sandbox to test mental models purely for intellectual curiosity.",
+        reason_zh: "推薦理由與心智機制對應：主導功能內傾思考（Ti）追求嚴密底層邏輯與第一原理，輔助功能外傾直覺（Ne）則樂於探求多向度的假設可能性。算法研發、數據科學或學術研究能讓你不受干擾地剖析事物運作本質；而硬體改造、天文觀測與解謎等興趣，為你提供了一個無邊界的思維沙盒，滿足純粹的探索慾。"
       },
       "INFJ": {
         code: "Ni-Fe", title_en: "Insightful Counselor", title_zh: "具洞察力的諮商者", emoji: "🛡️",
-        story_en: "Your dominant Ni yields profound intuitive realizations about future human trajectories. Your auxiliary Fe channels these insights into compassionate action, fostering harmony and human growth.",
+        story_en: "Your dominant Ni yields profound intuitive realizations about future human trajectories. Your auxiliary Fe channels these insights into compassionate action.",
         story_zh: "你的主導功能（Ni）對人類未來的發展軌跡有著深刻的直覺洞察；輔助功能（Fe）則將這些洞察轉化為具同理心的行動，促進團隊和諧與個人成長。",
-        analogy_en: "'The Quiet Navigator': You sense shifts in human currents long before they reach the shore, guiding others toward personal transformation with soft wisdom.",
+        analogy_en: "'The Quiet Navigator': Sensing shifts in human currents long before they reach the shore, guiding others toward personal transformation.",
         analogy_zh: "「深邃的航海導師」：你在暗湧抵達海岸前很久便已察覺人心變化，以柔和的智慧指引他人進行自我蛻變。",
-        sugg_en: ["Schedule mandatory quiet time to replenish your cognitive batteries.", "Differentiate your own emotions from the stress absorbed from others.", "Express your needs directly without expecting others to intuitively guess them."],
-        sugg_zh: ["安排定期的獨處時間，為你的認知能量充電。", "學會區分自己的真實情緒與吸收自他人的壓力。", "直接表達自身需求，避免期待他人能全憑直覺猜中。"]
+        figures: [
+          { cat_en: "Movie Character", cat_zh: "電影角色", name_en: "Gandalf", name_zh: "甘道夫", desc_en: "The Lord of the Rings", desc_zh: "《指環王》" },
+          { cat_en: "Comic / Anime", cat_zh: "動漫角色", name_en: "Itachi Uchiha", name_zh: "宇智波鼬", desc_en: "Naruto", desc_zh: "《火影忍者》" },
+          { cat_en: "Public Celebrity", cat_zh: "知名公眾人物", name_en: "Carl Jung / Lady Gaga", name_zh: "卡爾·榮格 / Lady Gaga", desc_en: "Psychologist & Artist", desc_zh: "心理學家與藝術家" }
+        ],
+        sugg_en: ["Schedule mandatory quiet time to replenish your cognitive energy.", "Differentiate your own emotions from the stress absorbed from others.", "Express your needs directly without expecting others to guess."],
+        sugg_zh: ["安排定期的獨處時間，為你的認知能量充電。", "學會區分自己的真實情緒與吸收自他人的壓力。", "直接表達自身需求，避免期待他人能全憑直覺猜中。"],
+        recs: [
+          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Psychotherapy, Human Resources Strategy, Educational Leadership, Non-profit Directing", name_zh: "心理治療與諮商、組織文化與人才發展、教育推廣管理、非營利組織領袖" },
+          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Symbolic Creative Writing, Mindful Meditation, Visiting Museums, Journaling", name_zh: "寓言/象徵文學創作、正念冥想、博物館與藝術展巡禮、深度閱讀與冥想日誌" }
+        ],
+        reason_en: "Why these recommendations fit: Dominant Ni perceives subtle long-term patterns in human development, while auxiliary Fe builds meaningful interpersonal connections and harmony. Professions in counseling, educational strategy, or organizational culture allow you to guide individuals toward genuine personal growth. Hobbies focused on reflection, symbolism, and quiet artistic expression help restore your emotional reserves while feeding your deep need for narrative meaning.",
+        reason_zh: "推薦理由與心智機制對應：主導功能內傾直覺（Ni）讓你對人性轉變趨勢有深邃預判，輔助功能外傾情感（Fe）則帶來溫暖的人際連結能力。心理諮商、教育或組織文化發展能讓你協助他人實現長遠改變；而正念冥想、博物館巡禮與象徵文學寫作等興趣，則能助你在靜謐中滋養心靈，梳理豐富的直覺體驗。"
       },
       "ENTP": {
         code: "Ne-Ti", title_en: "Innovative Debater", title_zh: "創新辯論家", emoji: "⚡",
-        story_en: "Your dominant Ne rapidly sparks dynamic new ideas and connections across disparate domains. Your auxiliary Ti analyzes these theories against a sharp internal logical framework to filter out viable models.",
+        story_en: "Your dominant Ne rapidly sparks dynamic new ideas across disparate domains. Your auxiliary Ti analyzes these theories against a sharp internal logical framework.",
         story_zh: "你的主導功能（Ne）能快速在不同領域間擦出動態想法與新奇關聯；輔助功能（Ti）則運用犀利的內在邏輯框架分析這些理論，篩選出可行的模型。",
-        analogy_en: "'The Spark Generator': You collide opposing concepts together to ignite brilliant breakthroughs, constantly testing structural boundaries.",
+        analogy_en: "'The Spark Generator': Colliding opposing concepts together to ignite brilliant breakthroughs, constantly testing structural boundaries.",
         analogy_zh: "「創意火花發生器」：你讓相互對立的概念碰撞，從而點燃突破性的靈感，並不斷挑戰傳統結構的邊界。",
-        sugg_en: ["Commit to seeing high-priority projects through to complete implementation.", "Recognize when debating ideas might overwhelm more sensitive collaborators.", "Establish routine systems to manage practical day-to-day administrative details."],
-        sugg_zh: ["承諾並堅持將高優先級的項目貫徹執行至最終落實。", "意識到過度辯論可能對較為敏感的合作夥伴造成壓力。", "建立規律的系統來處理日常具體的行政細節。"]
+        figures: [
+          { cat_en: "Movie Character", cat_zh: "電影角色", name_en: "Tony Stark / Iron Man", name_zh: "東尼·史塔克 / 鋼鐵人", desc_en: "Marvel Cinematic Universe", desc_zh: "《漫威宇宙》" },
+          { cat_en: "Comic / Anime", cat_zh: "動漫角色", name_en: "Gintoki Sakata", name_zh: "坂田銀時", desc_en: "Gintama", desc_zh: "《銀魂》" },
+          { cat_en: "Public Celebrity", cat_zh: "知名公眾人物", name_en: "Steve Jobs / Richard Feynman", name_zh: "史蒂夫·賈伯斯 / 理查·費曼", desc_en: "Apple Co-founder & Physicist", desc_zh: "蘋果創辦人與著名物理學家" }
+        ],
+        sugg_en: ["Commit to seeing high-priority projects through to complete implementation.", "Recognize when debating ideas might overwhelm more sensitive collaborators.", "Establish routine systems to manage practical day-to-day details."],
+        sugg_zh: ["承諾並堅持將高優先級的項目貫徹執行至最終落實。", "意識到過度辯論可能對較為敏感的合作夥伴造成壓力。", "建立規律的系統來處理日常具體的行政細節。"],
+        recs: [
+          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Venture Capital, Entrepreneurship, Creative Direction, Intellectual Property Law", name_zh: "創投/風險投資、連續創業、廣告創意總監、智慧財產權法律諮詢、科技新創" },
+          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Improv Theater, Debate / Podcasting, Hackathons, Rapid Prototype Building", name_zh: "即興劇表演、播客節目主持/辯論、黑客松競賽、快速原型產品製作" }
+        ],
+        reason_en: "Why these recommendations fit: Dominant Ne thrives on unearthing disruptive concepts, paired with auxiliary Ti's ability to rigorously pressure-test logical validity. Entrepreneurship, venture capital, and creative direction allow you to pivot rapidly and challenge conventional status quo without getting stuck in static routine. Dynamic activities like hackathons, podcasting, or improv satisfy your urge for brain-stretching, fast-paced conceptual sparring.",
+        reason_zh: "推薦理由與心智機制對應：主導功能外傾直覺（Ne）驅使你探尋破局創新，輔助功能內傾思考（Ti）則能進行敏銳嚴謹的邏輯質驗。創業、風投與創意總監等職業能為你提供快速反覆運算與打破常規的舞台；而即興劇、播客主持人與黑客松等興趣，則能讓你享受快節奏的概念碰撞與腦力發酵。"
       },
       "ENFP": {
         code: "Ne-Fi", title_en: "Inspiring Explorer", title_zh: "充滿靈感的探索者", emoji: "🌊",
-        story_en: "Your dominant Ne naturally sees vast networks of potential and inspiring futures. Your auxiliary Fi grounds these creative ventures in deeply felt personal ethics and authentic passion.",
-        story_zh: "你的主導功能（Ne）能天然看到無限的潛力網絡與令人振奮的未來；輔助功（Fi）則將這些創意冒險扎根於真摯的個人道德信念與熱情之中。",
-        analogy_en: "'The Wind in the Sails': You bring infectious energy and fresh direction to stagnant situations, inspiring people to explore uncharted territories.",
+        story_en: "Your dominant Ne naturally sees vast networks of potential and inspiring futures. Your auxiliary Fi grounds these creative ventures in deeply felt personal ethics.",
+        story_zh: "你的主導功能（Ne）能天然看到無限的潛力網絡與令人振奮的未來；輔助功能（Fi）則將這些創意冒險扎根於真摯的個人道德信念與熱情之中。",
+        analogy_en: "'The Wind in the Sails': Bringing infectious energy and fresh direction to stagnant situations, inspiring people to explore uncharted territories.",
         analogy_zh: "「揚帆的迎風勁吹」：你為停滯不前的局勢注入具感染力的能量與全新方向，激勵他人探索未知的領域。",
+        figures: [
+          { cat_en: "Movie Character", cat_zh: "電影角色", name_en: "Peter Parker / Spider-Man", name_zh: "彼得·帕克 / 蜘蛛人", desc_en: "Spider-Man Universe", desc_zh: "《蜘蛛人》" },
+          { cat_en: "Comic / Anime", cat_zh: "動漫角色", name_en: "Monkey D. Luffy", name_zh: "蒙其·D·魯夫", desc_en: "One Piece", desc_zh: "《航海王》" },
+          { cat_en: "Public Celebrity", cat_zh: "知名公眾人物", name_en: "Robin Williams / Walt Disney", name_zh: "羅賓·威廉斯 / 華特·迪士尼", desc_en: "Actor & Creative Visionary", desc_zh: "演藝家與迪士尼創辦人" }
+        ],
         sugg_en: ["Prioritize your top ideas rather than pursuing every exciting spark.", "Develop structured habits to maintain long-term focus on key targets.", "Build grounding routines to manage sensory energy levels."],
-        sugg_zh: ["學會為你的點子排序，而非同時追求每個令人興奮的火花。", "養成結構化的習慣，保持對核心目標的長期專注。", "建立穩固的生活規律以有效調配感官能量。"]
+        sugg_zh: ["學會為你的點子排序，而非同時追求每個令人興奮的火花。", "養成結構化的習慣，保持對核心目標的長期專注。", "建立穩固的生活規律以有效調配感官能量。"],
+        recs: [
+          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Media Production, Community Engagement, Campaign Design, Travel & Tourism Innovation", name_zh: "新媒體內容策劃、社群體驗設計、整合行銷推廣、旅遊與文化體驗創新" },
+          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Blogging / Vlogging, World Travel, Performing Arts, Community Event Organizing", name_zh: "影音Vlog創作、背包環球旅行、舞台劇表演、社群主題派對與活動企劃" }
+        ],
+        reason_en: "Why these recommendations fit: Dominant Ne constantly discovers exciting new horizons, while auxiliary Fi ensures every endeavor resonates with your personal core values. Dynamic roles in media, community building, and campaign strategy allow you to motivate others while retaining freedom of self-expression. Engaging in vlogging, travel, and performing arts keeps your imagination stimulated and allows your authentic personality to shine.",
+        reason_zh: "推薦理由與心智機制對應：主導功能外傾直覺（Ne）讓你眼中充滿新奇機會，輔助功能內傾情感（Fi）則確保行動緊扣個人信念與情感熱情。媒體策劃、體驗設計與旅遊文化創新等行業能賦予你充分的自主性；而旅行、內容創作與舞台表演等興趣，能持續滋養你的想像力，並讓真摯的感染力自然流露。"
       },
       "ENTJ": {
         code: "Te-Ni", title_en: "Decisive Commander", title_zh: "果斷的指揮官", emoji: "🚀",
-        story_en: "Your dominant Te drives relentless operational efficiency and structured progress. Your auxiliary Ni supports your leadership with long-range strategic vision and predictive foresight.",
+        story_en: "Your dominant Te drives relentless operational efficiency and structured progress. Your auxiliary Ni supports your leadership with long-range strategic vision.",
         story_zh: "你的主導功能（Te）追求不懈的營運效率與結構化推進；輔助功能（Ni）則以長遠的戰略遠見與前瞻預測，為你的領導力提供深層支撐。",
-        analogy_en: "'The Master Architect of Systems': You transform chaotic environments into streamlined, high-performing structures designed for long-term scalability.",
+        analogy_en: "'The Master Architect of Systems': Transforming chaotic environments into streamlined, high-performing structures designed for long-term scalability.",
         analogy_zh: "「系統的總建築師」：你將混亂無序的環境重組為高效、流暢且具備長期擴展能力的卓越結構。",
-        sugg_en: ["Practice active listening to incorporate valuable qualitative input.", "Praise process improvements and individual effort, not just bottom-line goals.", "Balance high drive with intentional periods of rest to avoid burnout."],
-        sugg_zh: ["練習積極傾聽，以吸納具有價值的質化意見。", "讚賞過程中的進步與個人努力，而非僅關注最終指標。", "在強大的推進力與主動休息之間取得平衡，避免過勞。"]
+        figures: [
+          { cat_en: "Movie Character", cat_zh: "電影角色", name_en: "Miranda Priestly", name_zh: "米蘭達·普利斯萊", desc_en: "The Devil Wears Prada", desc_zh: "《穿著Prada的惡魔》" },
+          { cat_en: "Comic / Anime", cat_zh: "動漫角色", name_en: "Erwin Smith", name_zh: "艾爾文·史密斯", desc_en: "Attack on Titan", desc_zh: "《進擊的巨人》" },
+          { cat_en: "Public Celebrity", cat_zh: "知名公眾人物", name_en: "Steve Ballmer / Gordon Ramsay", name_zh: "史蒂夫·鮑爾默 / 戈登·拉姆齊", desc_en: "Business Executive & Celebrity Chef", desc_zh: "商業巨擘與知名名廚" }
+        ],
+        sugg_en: ["Practice active listening to incorporate valuable qualitative input.", "Praise process improvements and individual effort, not just bottom-line goals.", "Balance high drive with intentional periods of rest."],
+        sugg_zh: ["練習積極傾聽，以吸納具有價值的質化意見。", "讚賞過程中的進步與個人努力，而非僅關注最終指標。", "在強大的推進力與主動休息之間取得平衡，避免過勞。"],
+        recs: [
+          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Executive Leadership, Operations Management, Investment Banking, Legal Advocacy", name_zh: "高階企業管理、營運總監、投資銀行、商業法務律師、大型專案指揮" },
+          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Competitive Endurance Sports, Marathon / Triathlon, Real Estate Investment, Golf", name_zh: "競技性體育賽事、馬拉松/鐵人三項、不動產投資研究、高爾夫戰略賽事" }
+        ],
+        reason_en: "Why these recommendations fit: Dominant Te seeks clear measurable goals, system optimization, and total operational control, supported by auxiliary Ni's long-range foresight. Positions in executive management, operations, and corporate law give you the direct leverage needed to build scalable organizations. Hobbies with high goals like marathons, real estate investment, or competitive sports allow you to channel your drive into measurable personal achievements.",
+        reason_zh: "推薦理由與心智機制對應：主導功能外傾思考（Te）追求明確可衡量的目標與效率極致，輔助功能內傾直覺（Ni）則給予宏觀戰略前瞻。企業高階管理、營運總監與投資銀行等領域能為你提供發揮組織統籌力的權杖；而馬拉松、鐵人三項與資產配置研究等興趣，則能讓你持續挑戰自我極限，享受達成宏大目標的滿足感。"
       },
       "ENFJ": {
         code: "Fe-Ni", title_en: "Empathetic Catalyst", title_zh: "具共情力的催化劑", emoji: "🔥",
-        story_en: "Your dominant Fe tunes into collective emotions and social needs effortlessly. Your auxiliary Ni gives you deep visionary insight into how to catalyze human potential for long-term growth.",
+        story_en: "Your dominant Fe tunes into collective emotions and social needs effortlessly. Your auxiliary Ni gives you deep visionary insight into catalyzing human potential.",
         story_zh: "你的主導功能（Fe）能輕鬆融入集體情感與社交需求；輔助功能（Ni）則為你提供深刻的遠見，懂得如何催化人類潛能以實現長期成長。",
-        analogy_en: "'The Orchestrator of Harmony': You bring out the unique resonance in every individual, harmonizing diverse voices into a powerful collective movement.",
+        analogy_en: "'The Orchestrator of Harmony': Bringing out the unique resonance in every individual, harmonizing diverse voices into a powerful movement.",
         analogy_zh: "「和諧交響樂的指揮家」：你能發掘每個人獨特的共鳴，將多元的聲音和諧地凝聚成強大的集體力量。",
+        figures: [
+          { cat_en: "Movie Character", cat_zh: "電影角色", name_en: "Morpheus", name_zh: "墨菲斯", desc_en: "The Matrix", desc_zh: "《駭客任務》" },
+          { cat_en: "Comic / Anime", cat_zh: "動漫角色", name_en: "All Might", name_zh: "歐爾麥特", desc_en: "My Hero Academia", desc_zh: "《我的英雄學院》" },
+          { cat_en: "Public Celebrity", cat_zh: "知名公眾人物", name_en: "Oprah Winfrey / Barack Obama", name_zh: "歐普拉 / 巴拉克·歐巴馬", desc_en: "Media Leader & Former President", desc_zh: "媒體巨擘與前美國總統" }
+        ],
         sugg_en: ["Ensure your own well-being is prioritized alongside helping others.", "Accept that constructive conflict is sometimes necessary for growth.", "Avoid over-extending your personal commitments."],
-        sugg_zh: ["在關懷他人的同時，確保將自己的身心健康放在優先位置。", "接納建設性的衝突有時是促進真實成長的必要過程。", "避免過度承諾而導致精力透支。"]
+        sugg_zh: ["在關懷他人的同時，確保將自己的身心健康放在優先位置。", "接納建設性的衝突有時是促進真實成長的必要過程。", "避免過度承諾而導致精力透支。"],
+        recs: [
+          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Public Relations, Community Leadership, Executive Coaching, Training & Development", name_zh: "公共關係與品牌傳播、非營利組織領袖、企業高階教練、培訓與人才拓展" },
+          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Hosting Dinner Parties, Group Fitness Coaching, Volunteering, Public Speaking Workshops", name_zh: "主持主題晚宴與聚會、團體健身指導、公益志工組織、公眾演講工作坊" }
+        ],
+        reason_en: "Why these recommendations fit: Dominant Fe intuitively mirrors and organizes social dynamics to build unified consensus, while auxiliary Ni perceives deeper individual motives. PR, executive coaching, and community leadership allow you to guide groups toward shared transformational objectives. Group-centric hobbies like hosting gatherings, public speaking, or group coaching align perfectly with your passion for uplifting people together.",
+        reason_zh: "推薦理由與心智機制對應：主導功能外傾情感（Fe）能自然凝聚群體情感，輔助功能內傾直覺（Ni）則能敏銳察覺長遠的人性需求。公共關係、人才培訓與教練指導領域能充分發揮你激勵他人的天賦；而聚會主持、公益志工與演講工作坊等興趣，則能讓你置身於充滿共鳴的人際網絡中，體驗攜手共進的樂趣。"
       }
     };
 
@@ -869,11 +1018,11 @@
       const phrases = currentLang === "zh" ? [
         "🔍 正在掃描8維認知功能回應...",
         "⚡ 正在評估主導與輔助心智架構...",
-        "🧩 正在生成個性化心理故事與成長建議..."
+        "🧩 正在匹配代表人物、職涯/興趣與心理機制推薦..."
       ] : [
         "🔍 Scanning 8-dimension cognitive responses...",
         "⚡ Evaluating dominant & auxiliary stack...",
-        "🧩 Compiling narrative analysis & suggestions..."
+        "🧩 Matching figures, career, hobbies & cognitive rationale..."
       ];
 
       let elapsed = 0;
@@ -922,7 +1071,7 @@
       const mbti = `${letter1}${letter2}${letter3}${letter4}`;
       const data = typeMapping[mbti] || typeMapping["INFP"];
 
-      // Update Result Elements
+      // Update Result Basic Info
       document.getElementById("res-mbti").textContent = mbti;
       document.getElementById("res-code").textContent = `(${data.code})`;
       document.getElementById("res-title").textContent = currentLang === "zh" ? data.title_zh : data.title_en;
@@ -933,12 +1082,48 @@
       // Dynamic Labels
       document.getElementById("lbl-narrative").textContent = currentLang === "zh" ? "心理機制故事與情境" : "Context & Mindset Story";
       document.getElementById("lbl-analogy").textContent = currentLang === "zh" ? "現實生活比喻" : "Real-World Analogy";
+      document.getElementById("lbl-figures").textContent = currentLang === "zh" ? "代表人物與角色（電影 / 動漫 / 名人）" : "Representative Examples (Movie / Comic / Celebrity)";
+      document.getElementById("lbl-recs").textContent = currentLang === "zh" ? "推薦職業與興趣愛好" : "Suggested Occupations & Hobbies";
+      document.getElementById("lbl-reason").textContent = currentLang === "zh" ? "推薦理由與心智機制對應" : "Recommendation Rationale";
       document.getElementById("lbl-suggestions").textContent = currentLang === "zh" ? "個人成長與行動建議" : "Action Suggestions";
 
-      // Populate Story, Analogy, and Suggestions
+      // Populate Story, Analogy and Rationale
       document.getElementById("res-story").textContent = currentLang === "zh" ? data.story_zh : data.story_en;
       document.getElementById("res-analogy").textContent = currentLang === "zh" ? data.analogy_zh : data.analogy_en;
+      document.getElementById("res-reason").textContent = currentLang === "zh" ? data.reason_zh : data.reason_en;
 
+      // Render Representative Figures Grid
+      const figuresGrid = document.getElementById("res-figures");
+      figuresGrid.innerHTML = "";
+      if (data.figures) {
+        data.figures.forEach(fig => {
+          const card = document.createElement("div");
+          card.className = "figure-card";
+          card.innerHTML = `
+            <div class="cat">${currentLang === "zh" ? fig.cat_zh : fig.cat_en}</div>
+            <div class="name">${currentLang === "zh" ? fig.name_zh : fig.name_en}</div>
+            <div class="desc">${currentLang === "zh" ? fig.desc_zh : fig.desc_en}</div>
+          `;
+          figuresGrid.appendChild(card);
+        });
+      }
+
+      // Render Suggested Career & Hobbies
+      const recsGrid = document.getElementById("res-recs");
+      recsGrid.innerHTML = "";
+      if (data.recs) {
+        data.recs.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "rec-card";
+          card.innerHTML = `
+            <div class="cat">${currentLang === "zh" ? item.cat_zh : item.cat_en}</div>
+            <div class="name">${currentLang === "zh" ? item.name_zh : item.name_en}</div>
+          `;
+          recsGrid.appendChild(card);
+        });
+      }
+
+      // Populate Suggestions
       const suggList = document.getElementById("res-suggestions");
       suggList.innerHTML = "";
       const items = currentLang === "zh" ? data.sugg_zh : data.sugg_en;
