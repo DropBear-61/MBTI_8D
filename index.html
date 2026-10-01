@@ -609,48 +609,49 @@
       top: -9999px;
     }
 
+    /* LIGHT THEME CERTIFICATE FOR PRINTING / PNG EXPORT */
     .cert-frame {
       width: 900px;
-      background: #0f172a;
-      color: #f8fafc;
+      background: #ffffff;
+      color: #0f172a;
       padding: 2.2rem;
-      border: 12px solid #1e293b;
+      border: 12px solid #e2e8f0;
       box-sizing: border-box;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       position: relative;
     }
 
     .cert-inner-border {
-      border: 2px dashed #a855f7;
+      border: 2px dashed #7e22ce;
       padding: 1.75rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 1rem;
-      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+      background: #ffffff;
     }
 
     .cert-title-en {
       font-size: 1.8rem;
       font-weight: 800;
       letter-spacing: 2px;
-      color: #38bdf8;
+      color: #0284c7;
       text-transform: uppercase;
       text-align: center;
     }
 
     .cert-sub {
       font-size: 0.95rem;
-      color: #94a3b8;
+      color: #64748b;
       margin-top: -0.4rem;
     }
 
     .cert-user-name {
       font-size: 2.1rem;
       font-weight: 900;
-      color: #f59e0b;
+      color: #d97706;
       margin: 0.2rem 0;
-      border-bottom: 2px solid #f59e0b;
+      border-bottom: 2px solid #d97706;
       padding-bottom: 0.2rem;
       width: 75%;
       text-align: center;
@@ -661,29 +662,29 @@
       align-items: center;
       justify-content: space-between;
       width: 100%;
-      background: rgba(15, 23, 42, 0.7);
+      background: #f8fafc;
       padding: 0.85rem 1.5rem;
       border-radius: 12px;
-      border: 1px solid #334155;
+      border: 1px solid #cbd5e1;
     }
 
     .cert-mbti-type {
       font-size: 2.5rem;
       font-weight: 900;
-      color: #38bdf8;
+      color: #0284c7;
       line-height: 1;
     }
 
     .cert-mbti-title {
       font-size: 1.1rem;
       font-weight: 700;
-      color: #f8fafc;
+      color: #0f172a;
     }
 
     .cert-section-label {
       font-size: 0.82rem;
       font-weight: 700;
-      color: #38bdf8;
+      color: #0284c7;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       margin-bottom: 0.3rem;
@@ -691,14 +692,14 @@
 
     .cert-narrative-box {
       width: 100%;
-      background: rgba(15, 23, 42, 0.5);
-      border: 1px solid #334155;
-      border-left: 4px solid #a855f7;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-left: 4px solid #7e22ce;
       padding: 0.75rem 1rem;
       border-radius: 0 8px 8px 0;
       font-size: 0.82rem;
       line-height: 1.45;
-      color: #cbd5e1;
+      color: #334155;
     }
 
     .cert-grid-2col {
@@ -709,8 +710,8 @@
     }
 
     .cert-panel {
-      background: rgba(15, 23, 42, 0.5);
-      border: 1px solid #334155;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
       border-radius: 8px;
       padding: 0.75rem;
       display: flex;
@@ -727,7 +728,7 @@
 
     .cert-axis-bar-bg {
       height: 8px;
-      background: #334155;
+      background: #e2e8f0;
       border-radius: 4px;
       overflow: hidden;
       display: flex;
@@ -735,7 +736,7 @@
 
     .cert-axis-bar-fill {
       height: 100%;
-      background: #38bdf8;
+      background: #0284c7;
     }
 
     .cert-scores-grid {
@@ -746,12 +747,13 @@
     }
 
     .cert-score-item {
-      background: #0f172a;
-      border: 1px solid #334155;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
       padding: 0.4rem;
       border-radius: 6px;
       text-align: center;
       font-size: 0.8rem;
+      color: #334155;
     }
 
     .cert-meta-info {
@@ -759,9 +761,9 @@
       justify-content: space-between;
       width: 100%;
       font-size: 0.8rem;
-      color: #94a3b8;
+      color: #64748b;
       margin-top: 0.5rem;
-      border-top: 1px solid #334155;
+      border-top: 1px solid #cbd5e1;
       padding-top: 0.75rem;
     }
 
@@ -1015,25 +1017,25 @@
     </div>
   </div>
 
-  <!-- HIDDEN CERTIFICATE LAYOUT FOR CANVAS RENDERING -->
+  <!-- HIDDEN LIGHT-THEME CERTIFICATE LAYOUT FOR CANVAS RENDERING -->
   <div id="cert-export-wrapper">
     <div id="cert-frame" class="cert-frame">
       <div class="cert-inner-border">
         <div class="cert-title-en">Cognitive Profile Certificate</div>
         <div class="cert-sub">認知功能分析鑑定證書</div>
 
-        <div style="font-size: 0.88rem; color: #94a3b8; margin-top: -0.1rem;">This certifies that</div>
+        <div style="font-size: 0.88rem; color: #64748b; margin-top: -0.1rem;">This certifies that</div>
         <div id="cert-out-name" class="cert-user-name">Your Name</div>
 
         <!-- MBTI Main Title Badge -->
         <div class="cert-mbti-box">
           <div>
             <div id="cert-out-mbti" class="cert-mbti-type">INFP</div>
-            <div id="cert-out-code" style="font-size: 0.85rem; color: #a855f7; font-weight: 700; margin-top: 0.2rem;">Fi - Ne - Si - Te</div>
+            <div id="cert-out-code" style="font-size: 0.85rem; color: #7e22ce; font-weight: 700; margin-top: 0.2rem;">Fi - Ne - Si - Te</div>
           </div>
           <div style="text-align: right;">
             <div id="cert-out-title" class="cert-mbti-title">Authentic Idealist / 追求真實的理想主義者</div>
-            <div id="cert-out-hero-parent" style="font-size: 0.82rem; color: #38bdf8; font-weight: 600; margin-top: 0.2rem;">
+            <div id="cert-out-hero-parent" style="font-size: 0.82rem; color: #0284c7; font-weight: 600; margin-top: 0.2rem;">
               Hero: Fi | Parent: Ne
             </div>
           </div>
@@ -1060,7 +1062,7 @@
           <!-- Career & Hobbies -->
           <div class="cert-panel">
             <div class="cert-section-label">🚀 Recommendations / 推薦領域與興趣</div>
-            <div id="cert-out-recs" style="font-size: 0.8rem; color: #cbd5e1; display: flex; flex-direction: column; gap: 0.4rem;">
+            <div id="cert-out-recs" style="font-size: 0.8rem; color: #334155; display: flex; flex-direction: column; gap: 0.4rem;">
               <!-- Dynamic Recs -->
             </div>
           </div>
@@ -1078,8 +1080,8 @@
 
         <!-- Meta Footer -->
         <div class="cert-meta-info">
-          <div>📍 Geolocation / 地點: <span id="cert-out-location" style="color: #f8fafc;">Hong Kong</span></div>
-          <div>🕒 Timestamp / 時間: <span id="cert-out-time" style="color: #f8fafc;">2026-10-01 20:14</span></div>
+          <div>📍 Geolocation / 地點: <span id="cert-out-location" style="color: #0f172a; font-weight: 600;">Hong Kong</span></div>
+          <div>🕒 Timestamp / 時間: <span id="cert-out-time" style="color: #0f172a; font-weight: 600;">2026-10-01 20:14</span></div>
         </div>
       </div>
     </div>
@@ -1576,8 +1578,8 @@
         item.className = "cert-axis-item";
         item.innerHTML = `
           <div style="display: flex; justify-content: space-between; font-weight: 600;">
-            <span style="color: #38bdf8;">${axis.leftLabel.split(' ')[0]} ${leftPct}%</span>
-            <span style="color: #a855f7;">${axis.rightLabel.split(' ')[0]} ${rightPct}%</span>
+            <span style="color: #0284c7;">${axis.leftLabel.split(' ')[0]} ${leftPct}%</span>
+            <span style="color: #7e22ce;">${axis.rightLabel.split(' ')[0]} ${rightPct}%</span>
           </div>
           <div class="cert-axis-bar-bg">
             <div class="cert-axis-bar-fill" style="width: ${leftPct}%;"></div>
@@ -1595,7 +1597,7 @@
         const nameText = rc.querySelector(".name") ? rc.querySelector(".name").textContent : "";
         
         const row = document.createElement("div");
-        row.innerHTML = `<strong style="color: #f59e0b;">${cat}:</strong> ${nameText}`;
+        row.innerHTML = `<strong style="color: #d97706;">${cat}:</strong> ${nameText}`;
         certRecs.appendChild(row);
       });
 
@@ -1605,7 +1607,7 @@
       Object.keys(functionScores).forEach(f => {
         const div = document.createElement("div");
         div.className = "cert-score-item";
-        div.innerHTML = `<strong style="color: #a855f7;">${f}</strong>: ${functionScores[f]} pts`;
+        div.innerHTML = `<strong style="color: #7e22ce;">${f}</strong>: ${functionScores[f]} pts`;
         certScores.appendChild(div);
       });
 
@@ -1613,7 +1615,7 @@
 
       html2canvas(certTarget, {
         scale: 2,
-        backgroundColor: "#0f172a"
+        backgroundColor: "#ffffff"
       }).then(canvas => {
         const image = canvas.toDataURL("image/png");
         const link = document.createElement("a");
