@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>8維認知功能性格測試 / 8 Cognitive Dimensions Explorer</title>
+  <!-- html2canvas for canvas rendering and PNG download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root[data-theme="dark"] {
       --bg-color: #0f172a;
@@ -66,7 +68,6 @@
       gap: 1.5rem;
     }
 
-    /* Top Controls */
     .top-controls {
       display: flex;
       justify-content: flex-end;
@@ -88,7 +89,6 @@
       background: var(--btn-hover);
     }
 
-    /* Card Styling */
     .card {
       background-color: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -113,7 +113,6 @@
       font-size: 0.95rem;
     }
 
-    /* Page Visibility */
     .page {
       display: none;
     }
@@ -124,7 +123,6 @@
       gap: 1.5rem;
     }
 
-    /* Visual Aid Chart (Landing) */
     .bidirectional-chart {
       display: flex;
       flex-direction: column;
@@ -170,7 +168,6 @@
       font-size: 0.85rem;
     }
 
-    /* Action Buttons */
     .start-actions {
       display: flex;
       gap: 1rem;
@@ -190,6 +187,7 @@
       cursor: pointer;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 0.5rem;
     }
 
@@ -198,7 +196,25 @@
       transform: translateY(-1px);
     }
 
-    /* Progress Bar */
+    .btn-secondary {
+      background-color: var(--badge-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 0.85rem 1.75rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--btn-hover);
+    }
+
     .progress-container {
       display: flex;
       flex-direction: column;
@@ -227,7 +243,6 @@
       transition: width 0.3s ease;
     }
 
-    /* Question & Options */
     .question-title {
       font-size: 1.15rem;
       font-weight: 600;
@@ -260,7 +275,6 @@
       border-color: var(--accent-mbti);
     }
 
-    /* Loading Scanner Page */
     .analysing-box {
       display: flex;
       flex-direction: column;
@@ -293,7 +307,6 @@
       min-height: 1.5em;
     }
 
-    /* Motion Emojis */
     .emoji-container {
       display: flex;
       justify-content: center;
@@ -328,7 +341,6 @@
       80% { transform: rotate(-4deg); }
     }
 
-    /* Famous Figures & Recommendation Grid */
     .figures-grid, .rec-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -365,7 +377,6 @@
       line-height: 1.4;
     }
 
-    /* Rationale / Reason Box */
     .reason-box, .deep-box {
       background: var(--badge-bg);
       border: 1px solid var(--card-border);
@@ -382,7 +393,6 @@
       border-left-color: var(--accent-func);
     }
 
-    /* Detailed Result Elements */
     .result-header {
       display: flex;
       align-items: center;
@@ -451,7 +461,6 @@
       color: var(--accent-mbti);
     }
 
-    /* BI-DIRECTIONAL MBTI LETTER TREND CHART */
     .mbti-bidirectional-container {
       background: var(--badge-bg);
       border: 1px solid var(--card-border);
@@ -510,7 +519,6 @@
       z-index: 2;
     }
 
-    /* Scores Breakdown Grid */
     .scores-list {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -530,7 +538,233 @@
 
     .score-chip strong { color: var(--accent-func); }
 
-    /* Footer & Disclaimer */
+    /* Modal Form Styling */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(4px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 1.75rem;
+      border-radius: 16px;
+      max-width: 450px;
+      width: 90%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .form-group label {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 8px;
+      background: var(--badge-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      font-size: 0.95rem;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--accent-mbti);
+    }
+
+    .location-btn-group {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    /* Off-screen Certificate Container */
+    #cert-export-wrapper {
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+    }
+
+    .cert-frame {
+      width: 900px;
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 2.2rem;
+      border: 12px solid #1e293b;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      position: relative;
+    }
+
+    .cert-inner-border {
+      border: 2px dashed #a855f7;
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+    }
+
+    .cert-title-en {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: #38bdf8;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .cert-sub {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      margin-top: -0.4rem;
+    }
+
+    .cert-user-name {
+      font-size: 2.1rem;
+      font-weight: 900;
+      color: #f59e0b;
+      margin: 0.2rem 0;
+      border-bottom: 2px solid #f59e0b;
+      padding-bottom: 0.2rem;
+      width: 75%;
+      text-align: center;
+    }
+
+    .cert-mbti-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      background: rgba(15, 23, 42, 0.7);
+      padding: 0.85rem 1.5rem;
+      border-radius: 12px;
+      border: 1px solid #334155;
+    }
+
+    .cert-mbti-type {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: #38bdf8;
+      line-height: 1;
+    }
+
+    .cert-mbti-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    .cert-section-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #38bdf8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.3rem;
+    }
+
+    .cert-narrative-box {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid #334155;
+      border-left: 4px solid #a855f7;
+      padding: 0.75rem 1rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: #cbd5e1;
+    }
+
+    .cert-grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .cert-panel {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .cert-axis-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      font-size: 0.75rem;
+    }
+
+    .cert-axis-bar-bg {
+      height: 8px;
+      background: #334155;
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .cert-axis-bar-fill {
+      height: 100%;
+      background: #38bdf8;
+    }
+
+    .cert-scores-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      width: 100%;
+    }
+
+    .cert-score-item {
+      background: #0f172a;
+      border: 1px solid #334155;
+      padding: 0.4rem;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+
+    .cert-meta-info {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-top: 0.5rem;
+      border-top: 1px solid #334155;
+      padding-top: 0.75rem;
+    }
+
     footer {
       border-top: 1px solid var(--card-border);
       padding-top: 1.25rem;
@@ -721,8 +955,14 @@
           <div id="scores-container" class="scores-list"></div>
         </div>
 
-        <div style="text-align: center; margin-top: 2rem;">
-          <button class="btn-primary" onclick="showPage('page-landing')">🔄 Retake Test / 重新測試</button>
+        <!-- Certificate Download & Retake Buttons -->
+        <div style="text-align: center; margin-top: 2rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+          <button class="btn-primary" style="background-color: var(--accent-green);" onclick="openCertModal()">
+            🎓 Download Certificate (PNG) / 下載證書
+          </button>
+          <button class="btn-secondary" onclick="showPage('page-landing')">
+            🔄 Retake Test / 重新測試
+          </button>
         </div>
 
         <!-- Footer -->
@@ -733,11 +973,114 @@
             <a href="https://www.capt.org" target="_blank" rel="noopener">CAPT (MBTI Research)</a>
           </div>
           <div>
-            <strong>⚠️ Disclaimer / 聲明:</strong><br>
+            <strong>⚠ Disclaimer / 聲明:</strong><br>
             English: Results reflect preferences based on your answers for personal development.<br>
             繁體中文：測試結果反映您當前回答的偏好傾向，供個人成長與心智機制的自我探索參考。
           </div>
         </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL FOR USER DETAILS (CERTIFICATE GENERATION) -->
+  <div id="cert-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h2 style="font-size: 1.2rem; font-weight: 700; color: var(--accent-mbti);">
+        🎓 Certificate Details / 證書資訊
+      </h2>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        Enter your details to generate your personalized Cognitive Function Certificate.
+        <br>請輸入資訊以生成您的專屬認知功能證書。
+      </p>
+
+      <div class="form-group">
+        <label for="input-user-name">Your Name / 姓名 *</label>
+        <input type="text" id="input-user-name" class="input-field" placeholder="e.g. Henrique Sou" value="Henrique Sou">
+      </div>
+
+      <div class="form-group">
+        <label for="input-user-location">Geolocation / 所在地</label>
+        <div class="location-btn-group">
+          <input type="text" id="input-user-location" class="input-field" placeholder="e.g. Macau / 澳門">
+          <button type="button" class="btn-secondary" style="padding: 0.5rem 0.75rem; font-size: 0.85rem;" onclick="detectLocation()">
+            📍 Detect
+          </button>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem;">
+        <button class="btn-secondary" onclick="closeCertModal()">Cancel / 取消</button>
+        <button class="btn-primary" onclick="generateAndDownloadPNG()">Download PNG / 下載</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HIDDEN CERTIFICATE LAYOUT FOR CANVAS RENDERING -->
+  <div id="cert-export-wrapper">
+    <div id="cert-frame" class="cert-frame">
+      <div class="cert-inner-border">
+        <div class="cert-title-en">Cognitive Profile Certificate</div>
+        <div class="cert-sub">認知功能分析鑑定證書</div>
+
+        <div style="font-size: 0.88rem; color: #94a3b8; margin-top: -0.1rem;">This certifies that</div>
+        <div id="cert-out-name" class="cert-user-name">Henrique Sou</div>
+
+        <!-- MBTI Main Title Badge -->
+        <div class="cert-mbti-box">
+          <div>
+            <div id="cert-out-mbti" class="cert-mbti-type">INFP</div>
+            <div id="cert-out-code" style="font-size: 0.85rem; color: #a855f7; font-weight: 700; margin-top: 0.2rem;">Fi - Ne - Si - Te</div>
+          </div>
+          <div style="text-align: right;">
+            <div id="cert-out-title" class="cert-mbti-title">Authentic Idealist / 追求真實的理想主義者</div>
+            <div id="cert-out-hero-parent" style="font-size: 0.82rem; color: #38bdf8; font-weight: 600; margin-top: 0.2rem;">
+              Hero: Fi | Parent: Ne
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Story -->
+        <div style="width: 100%;">
+          <div class="cert-section-label">📖 Core Mindset Summary / 心理機制摘要</div>
+          <div id="cert-out-story" class="cert-narrative-box">
+            ...
+          </div>
+        </div>
+
+        <!-- Grid: 4 Dichotomies & Recommendations -->
+        <div class="cert-grid-2col">
+          <!-- 4 Dichotomies -->
+          <div class="cert-panel">
+            <div class="cert-section-label">📊 Dichotomy Preferences / 4組對立趨勢</div>
+            <div id="cert-out-dichotomies" style="display: flex; flex-direction: column; gap: 0.4rem;">
+              <!-- Dynamic Rows -->
+            </div>
+          </div>
+
+          <!-- Career & Hobbies -->
+          <div class="cert-panel">
+            <div class="cert-section-label">🚀 Recommendations / 推薦領域與興趣</div>
+            <div id="cert-out-recs" style="font-size: 0.8rem; color: #cbd5e1; display: flex; flex-direction: column; gap: 0.4rem;">
+              <!-- Dynamic Recs -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 8 Cognitive Dimension Matrix -->
+        <div style="width: 100%;">
+          <div class="cert-section-label" style="text-align: center; margin-bottom: 0.4rem;">
+            ⚡ 8 Cognitive Dimensions Score Matrix / 8維認知功能得分矩陣
+          </div>
+          <div id="cert-out-scores" class="cert-scores-grid">
+            <!-- Dynamic Content -->
+          </div>
+        </div>
+
+        <!-- Meta Footer -->
+        <div class="cert-meta-info">
+          <div>📍 Geolocation / 地點: <span id="cert-out-location" style="color: #f8fafc;">Macau</span></div>
+          <div>🕒 Timestamp / 時間: <span id="cert-out-time" style="color: #f8fafc;">2026-10-01 20:14</span></div>
+        </div>
       </div>
     </div>
   </div>
@@ -850,251 +1193,54 @@
     const typeMapping = {
       "INFP": {
         code: "Fi-Ne-Si-Te", title_en: "Authentic Idealist", title_zh: "追求真實的理想主義者", emoji: "🌿",
-        story_en: "Your core identity revolves around an uncompromising quest for personal authenticity and deep moral resonance. Guided by your dominant Fi, you maintain a complex internal landscape of ethics. Your auxiliary Ne acts as a fertile creative engine, allowing you to envision unique connections and empathetic futures. You view the world not as a static practical framework, but as a dynamic tapestry of human potential.",
-        story_zh: "你的核心人格圍繞著對個人真實性與深層道德共鳴的堅定追求。在主導功能內傾情感（Fi）的引導下，你維持著精緻而高標準的內在價值體系；輔助功能外傾直覺（Ne）則像一座充滿活力的靈感花園，為你源源不絕地提供獨特的點子與對未來的深情想像。在你眼中，世界不是冰冷的實用架構，而是一幅由人類潛能與生命意義織成的動態錦圖。",
-        
+        story_en: "Your core identity revolves around an uncompromising quest for personal authenticity and deep moral resonance. Guided by your dominant Fi, you maintain a complex internal landscape of ethics. Your auxiliary Ne acts as a fertile creative engine, allowing you to envision unique connections and empathetic futures.",
+        story_zh: "你的核心人格圍繞著對個人真實性與深層道德共鳴的堅定追求。在主導功能內傾情感（Fi）的引導下，你維持著精緻而高標準的內在價值體系；輔助功能外傾直覺（Ne）則像一座充滿活力的靈感花園，為你源源不絕地提供獨特的點子與對未來的深情想像。",
         stack_en: "• Dominant Fi (Hero): Deeply filters experiences through core personal values and authenticity.\n• Auxiliary Ne (Parent): Generates creative options and explores multiple symbolic perspectives.\n• Tertiary Si (Child): Anchors memories and cherished nostalgic details for emotional comfort.\n• Inferior Te (Aspirant): Under stress, may manifest as rigid over-organization or hyper-criticism.",
         stack_zh: "• 主導功能 Fi（核心精神）：以深層的個人內在價值與真誠性過濾所有經歷。\n• 輔助功能 Ne（靈感推進）：產生多元創意選擇，探索事物背後的符號與可能性。\n• 第三功能 Si（記憶基石）：珍藏有意義的懷舊細節與經驗，提供情感安全感。\n• 劣勢功能 Te（潛在挑戰）：在極高壓力下，可能表現出過度僵化的管控或突發的批判。",
-
-        analogy_en: "'The Sanctuary Artisan': Carefully carving detailed emotional masterworks inside a private studio, sending out glowing lanterns of inspiration into the misty world.",
-        analogy_zh: "「隱世的花園工匠」：在安靜的內心工作坊中精心雕琢深沉的情感傑作，向外釋放一盞盞帶有靈光與同理心的明燈，指引迷茫的人群。",
-
-        workplace_en: "In professional environments, you serve as the moral conscience and creative visionary. You thrive in flexible work arrangements that honor autonomy and personal purpose. You dislike corporate office politics, overly rigid micro-management, and clinical decision-making that ignores human emotional impacts.",
-        workplace_zh: "在職場與團隊中，你扮演著「道德指南針」與「靈感策劃者」的角色。你在高度給予自主權與目標意義的彈性環境中表現最為出眾。你反對功利至上的政治算計、過度微觀的僵化管理，以及忽視人文關懷的冷酷決策。",
-
-        stress_en: "When faced with chronic stress or overwhelming practical demands, your inferior Te may emerge as a 'Grip Action'. You may suddenly become uncharacteristically pedantic, overly obsessed with organizing minor administrative details, or excessively self-critical regarding real-world execution.",
-        stress_zh: "當面臨長期壓力或無法承受的現實要求時，你的劣勢功能 Te 可能觸發「Grip 爆發現象」。你可能突然變得反常地刻板、過度強迫於梳理瑣碎的行政細節，或是對自己的執行能力產生嚴厲的自我批判。",
-
+        analogy_en: "'The Sanctuary Artisan': Carefully carving detailed emotional masterworks inside a private studio.",
+        analogy_zh: "「隱世的花園工匠」：在安靜的內心工作坊中精心雕琢深沉的情感傑作。",
+        workplace_en: "In professional environments, you serve as the moral conscience and creative visionary. You thrive in flexible work arrangements that honor autonomy.",
+        workplace_zh: "在職場與團隊中，你扮演著「道德指南針」與「靈感策劃者」的角色。你在高度給予自主權與目標意義的彈性環境中表現最為出眾。",
+        stress_en: "When faced with chronic stress, your inferior Te may emerge as a 'Grip Action'. You may suddenly become uncharacteristically pedantic or overly critical.",
+        stress_zh: "當面臨長期壓力或無法承受的現實要求時，你的劣勢功能 Te 可能觸發「Grip 爆發現象」，表現為突發的強迫或嚴厲批判。",
         figures: [
-          { cat_en: "Movie / Literature", cat_zh: "電影 / 文學角色", name_en: "Frodo Baggins", name_zh: "佛羅多·巴金斯", desc_en: "The Lord of the Rings: Driven by deep moral duty over fame.", desc_zh: "《指環王》：不求榮譽，僅凭堅定純粹的信念承擔重任。" },
+          { cat_en: "Movie / Literature", cat_zh: "電影 / 文學角色", name_en: "Frodo Baggins", name_zh: "佛羅多·巴金斯", desc_en: "The Lord of the Rings: Driven by deep moral duty over fame.", desc_zh: "《指環王》：不求榮譽，僅憑堅定純粹的信念承擔重任。" },
           { cat_en: "Comic / Anime", cat_zh: "動漫角色", name_en: "Alphonse Elric", name_zh: "阿爾馮斯·艾力克", desc_en: "Fullmetal Alchemist: Gentle soul with immense internal empathy.", desc_zh: "《鋼之鍊金術師》：擁有無比溫柔與包容力的堅韌靈魂。" },
-          { cat_en: "Public Celebrity", cat_zh: "著名人物", name_en: "J.R.R. Tolkien & Keanu Reeves", name_zh: "托爾金 / 基努·里維斯", desc_en: "Renowned Creator & Humble Actor.", desc_zh: "深邃的世界觀創作者與低調真誠的表演者。" }
+          { cat_en: "Public Celebrity", cat_zh: "著名人物", name_en: "Keanu Reeves", name_zh: "基努·里維斯", desc_en: "Humble, empathetic and deeply authentic actor.", desc_zh: "低調真誠且具備高同理心的表演者。" }
         ],
         recs: [
-          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Creative Writing, Counseling, Art Curation, ESG / NGO Value Management", name_zh: "創意寫作、心理諮商、文化藝術策展、公益/非營利組織、ESG永續發展" },
-          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Creative Journaling, Film Photography, Solo Hiking, Stargazing, Indie Music", name_zh: "獨立寫作與日誌、膠片攝影、獨自徒步探索、觀星、獨立音樂創作" }
+          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Creative Writing, Counseling, Art Curation, NGO Value Management", name_zh: "創意寫作、心理諮商、文化藝術策展、公益/非營利組織" },
+          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Creative Journaling, Film Photography, Solo Hiking, Stargazing", name_zh: "獨立寫作與日誌、膠片攝影、獨自徒步探索、觀星" }
         ],
-        reason_en: "Why these recommendations fit: Your dominant Fi demands strong alignment with personal values and emotional authenticity, while auxiliary Ne thrives when given creative autonomy. Career paths in writing, counseling, or non-profits allow you to express core human values without rigid bureaucratic constraints. Hobbies like photography, stargazing, and solo nature walks provide low-pressure outlets for reflection, aesthetic expression, and imaginative exploration.",
-        reason_zh: "推薦理由與心智機制對應：主導功能內傾情感（Fi）使你高度重視個體價值與真實性，輔助功能外傾直覺（Ne）則渴望豐富的創意空間。因此，文學創作、心理諮商或文化/公益領域能讓你發揮同理心與獨特視角，且不受僵化體制束縛；而膠片攝影、觀星或戶外徒步等興趣，則能為你提供無壓力的內心獨白空間，沉澱並轉化靈感。",
-        sugg_en: ["Set gentle boundaries to protect your emotional energy from energy vampires.", "Translate your rich inner ideas into real-world tangible artifacts stepwise.", "Practice externalizing your thoughts through writing or artistic creation daily."],
+        reason_en: "Why these recommendations fit: Dominant Fi demands strong alignment with personal values and emotional authenticity, while auxiliary Ne thrives when given creative autonomy.",
+        reason_zh: "推薦理由與心智機制對應：主導功能內傾情感（Fi）使你高度重視個體價值與真實性，輔助功能外傾直覺（Ne）則渴望豐富的創意空間。",
+        sugg_en: ["Set gentle boundaries to protect your emotional energy.", "Translate your rich inner ideas into real-world tangible artifacts stepwise.", "Practice externalizing your thoughts through writing daily."],
         sugg_zh: ["建立溫和而堅定的界線，保護你的情感精力免受無效消耗。", "將豐富的內在靈感分解為具體的步驟，轉化為可觸摸的實體成果。", "練習每天透過寫作或藝術創作將想法外化與他人分享。"]
       },
       "INTJ": {
         code: "Ni-Te-Fi-Se", title_en: "Strategic Visionary", title_zh: "戰略遠見者", emoji: "🎯",
-        story_en: "You are an architect of long-term strategic systems, perceiving the world through deep conceptual patterns (Ni) and structuring it with rigorous pragmatic logic (Te). Your mind naturally filters out superficial noise to focus on overarching master plans.",
-        story_zh: "你是長遠戰略體系的建築師，習慣透過深層的概念規律（Ni）洞察世界，並運用嚴謹的實用邏輯（Te）對外部環境進行重組。你的大腦會自然地過濾掉表面的雜音，全神貫注於構建宏大的全盤藍圖。",
-
-        stack_en: "• Dominant Ni (Hero): Synthesizes complex visual data into long-range singular visions.\n• Auxiliary Te (Parent): Implements structures, metrics, and efficient operational plans.\n• Tertiary Fi (Child): Protects deep personal ethics and selective loyalty to core causes.\n• Inferior Se (Aspirant): Under stress, may suffer from sensory overload or impulsive indulgence.",
-        stack_zh: "• 主導功能 Ni（核心前瞻）：將複雜的多元數據歸納為長遠而專一的未來願景。\n• 輔助功能 Te（系統執行）：建構高效的架構、衡量指標與實施流程。\n• 第三功能 Fi（內在原則）：維護深層的個人道德原則與對核心目標的極高忠誠。\n• 劣勢功能 Se（感官盲點）：在極高壓力下，可能遭遇感官過載或短期的衝動宣洩。",
-
-        analogy_en: "'The Chess Grandmaster': Visualizing twenty moves ahead, engineering structured pathways to ensure structural efficiency and goal attainment.",
-        analogy_zh: "「西洋棋特級大師」：能預判十幾步之外的全局趨勢，並設計出無懈可擊的結構化路徑，確保戰略目標的高效實現。",
-
-        workplace_en: "In executive and technical roles, you serve as the chief strategist and structural solver. You demand high competence and hate redundant meetings, operational friction, and unreasoned tradition.",
-        workplace_zh: "在企業與專業領域中，你充當著首席戰略家與結構解題者的角色。你對團隊專業度有極高要求，極度反感冗長無效的會議、營運內耗以及缺乏合理解釋的陳規陋習。",
-
-        stress_en: "Under overwhelming operational stress, your inferior Se may manifest as an impulsive binge on physical sensations, or an extreme fixation on minor physical flaws in your immediate environment.",
-        stress_zh: "在面對無法控局的巨大壓力時，你的劣勢功能 Se 可能以衝動性宣洩（如暴飲暴食、過度消費）或對環境中極其微小的物理瑕疵產生強迫性焦慮的形式顯現。",
-
+        story_en: "You are an architect of long-term strategic systems, perceiving the world through deep conceptual patterns (Ni) and structuring it with rigorous pragmatic logic (Te).",
+        story_zh: "你是長遠戰略體系的建築師，習慣透過深層的概念規律（Ni）洞察世界，並運用嚴謹的實用邏輯（Te）對外部環境進行重組。",
+        stack_en: "• Dominant Ni (Hero): Synthesizes complex visual data into long-range singular visions.\n• Auxiliary Te (Parent): Implements structures, metrics, and efficient operational plans.\n• Tertiary Fi (Child): Protects deep personal ethics.\n• Inferior Se (Aspirant): Under stress, may suffer from sensory overload.",
+        stack_zh: "• 主導功能 Ni（核心前瞻）：將複雜的數據歸納為長遠而專一的未來願景。\n• 輔助功能 Te（系統執行）：建構高效的架構與實施流程。\n• 第三功能 Fi（內在原則）：維護深層的個人道德原則。\n• 劣勢功能 Se（感官盲點）：壓力下可能遭遇感官過載。",
+        analogy_en: "'The Chess Grandmaster': Visualizing twenty moves ahead, engineering structured pathways.",
+        analogy_zh: "「西洋棋特級大師」：能預判十幾步之外的全局趨勢，並設計出結構化路徑。",
+        workplace_en: "In executive and technical roles, you serve as the chief strategist and structural solver.",
+        workplace_zh: "在專業領域中，你充當著首席戰略家與結構解題者的角色。",
+        stress_en: "Under stress, your inferior Se may manifest as an impulsive binge on physical sensations.",
+        stress_zh: "在面對巨大壓力時，你的劣勢功能 Se 可能以衝動性宣洩或對細微物理瑕疵的焦慮顯現。",
         figures: [
-          { cat_en: "Movie Character", cat_zh: "電影角色", name_en: "Batman / Bruce Wayne", name_zh: "蝙蝠俠 / 布魯斯·韋恩", desc_en: "The Dark Knight: Meticulous contingency planning for every scenario.", desc_zh: "《蝙蝠俠》：為每種可能性準備嚴密應對預案的戰略大師。" },
-          { cat_en: "Comic / Anime", cat_zh: "動漫角色", name_en: "Lelouch vi Britannia", name_zh: "魯路修", desc_en: "Code Geass: Orchestrating global moves to reshape the future.", desc_zh: "《反叛的魯路修》：運籌帷幄、重構世界的棋局掌控者。" },
-          { cat_en: "Public Celebrity", cat_zh: "著名人物", name_en: "Elon Musk & Christopher Nolan", name_zh: "伊隆·馬斯克 / 克里斯多福·諾蘭", desc_en: "Systems Pioneer & Non-linear Film Director.", desc_zh: "打破常規的工程創始人與結構精密的導演。" }
+          { cat_en: "Movie Character", cat_zh: "電影角色", name_en: "Batman / Bruce Wayne", name_zh: "蝙蝠俠", desc_en: "Meticulous contingency planning for every scenario.", desc_zh: "為每種可能性準備嚴密應對預案的戰略大師。" },
+          { cat_en: "Public Celebrity", cat_zh: "著名人物", name_en: "Elon Musk", name_zh: "伊隆·馬斯克", desc_en: "Systems Pioneer & First-principles thinker.", desc_zh: "打破常規的第一性原理工程創始人。" }
         ],
         recs: [
-          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Strategic Planning, Systems Architecture, Management Consulting, R&D Leadership", name_zh: "企業戰略規劃、系統架構師、管理諮詢、科技研發管理、金融分析" },
-          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Strategy Board Games (Chess, Go), Coding Projects, System Optimization, Archery", name_zh: "深度策略棋類（圍棋、西洋棋）、個人程式專案開發、個人數位工作流優化、射箭" }
+          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Strategic Planning, Systems Architecture, Management Consulting", name_zh: "企業戰略規劃、系統架構師、管理諮詢" },
+          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Chess, Go, Coding Projects, Archery", name_zh: "圍棋/西洋棋、個人程式專案開發、射箭" }
         ],
-        reason_en: "Why these recommendations fit: Your dominant Ni seeks long-term overarching visions, supported by auxiliary Te's drive for efficiency and measurable structure. You naturally excel in high-level strategy, systems design, and architecture where you can solve complex macroeconomic or structural puzzles. Hobbies involving tactical foresight, game theory, or coding satisfy your desire for intellectual challenge and internal mastery.",
-        reason_zh: "推薦理由與心智機制對應：主導功能內傾直覺（Ni）賦予你宏觀的前瞻與規律歸納能力，輔助功能外傾思考（Te）則提供系統化的落實與結構構造能力。因此，戰略規劃、系統架構與研發管理領域最能展現你構建長遠藍圖的優勢；而圍棋、專案開發或箭術等興趣，則能完美滿足你對邏輯深度、控局感與極致效率的追求。",
-        sugg_en: ["Allow room for unexpected pivot opportunities in your long-term plans.", "Practice active patience when communicating complex blueprints to non-INTJs.", "Acknowledge emotional and human relationship factors in key decisions."],
-        sugg_zh: ["在長期計劃中預留應對突發變化的彈性空間。", "向跨領域團隊傳達複雜藍圖時，保持積極的耐心與溝通。", "在重大決策過程中主動納入情感與人際連結的考量。"]
-      },
-      "INTP": {
-        code: "Ti-Ne-Si-Fe", title_en: "Analytical Conceptualizer", title_zh: "分析型概念家", emoji: "🧩",
-        story_en: "Your mind operates like an advanced conceptual engine, tirelessly seeking underlying logical consistency (Ti). You dissect arguments to their foundation and use auxiliary Ne to explore fascinating mental models across diverse domains.",
-        story_zh: "你的大腦像是一台頂級的概念解構引擎，孜孜不倦地尋求底層邏輯的一致性（Ti）。你習慣將所有論點拆解至最根本的真理，並運用輔助功能外傾直覺（Ne）在多元領域間探索迷人的理論模型。",
-
-        stack_en: "• Dominant Ti (Hero): Builds meticulous internal systems of logic and precise taxonomy.\n• Auxiliary Ne (Parent): Brainstorms theoretical patterns and novel connections.\n• Tertiary Si (Child): Stores detailed comparative data points and favorite specialized facts.\n• Inferior Fe (Aspirant): Under social pressure, may feel awkward with emotional displays.",
-        stack_zh: "• 主導功能 Ti（邏輯核心）：構建無懈可擊的內在邏輯分類與精密理論模型。\n• 輔助功能 Ne（發散探索）：腦力激盪出多維度假設與新奇的概念連結。\n• 第三功能 Si（數據庫）：積累精準的對比數據與感興趣的專業知識庫。\n• 劣勢功能 Fe（社交顧慮）：在人際壓力下，可能對情感表達感到生疏或焦慮。",
-
-        analogy_en: "'The Master Systems Mechanist': Disassembling every machine's gears in the workshop to understand its ultimate physics before designing a revolutionary original system.",
-        analogy_zh: "「精密的系統解構師」：在研究室中拆解每一台機器的齒輪運作原理，直到洞悉其物理本質，再重新設計出原創的精密系統。",
-
-        workplace_en: "You thrive as an independent problem solver, theoretical analyst, or algorithm designer. You hate intellectual sloppy logic, authoritarian rules without rational basis, and mandatory administrative busywork.",
-        workplace_zh: "你作為獨立解題者、理論分析師或演算法架構師時表現最為出色。你極度看重邏輯嚴謹度，反感缺乏理性依據的權威命令以及形式主義的瑣碎行政事務。",
-
-        stress_en: "Under extreme emotional or social overload, your inferior Fe may cause emotional outbursts or an anxious over-sensitivity to social rejection.",
-        stress_zh: "當面臨無法用邏輯處理的極高人際衝突時，你的劣勢功能 Fe 可能引發突發的情緒爆發，或對社交接納度產生過度的焦慮敏感。",
-
-        figures: [
-          { cat_en: "Movie Character", cat_zh: "電影角色", name_en: "Sherlock Holmes", name_zh: "夏洛克·福爾摩斯", desc_en: "Sherlock: Relentless pursuit of objective deductive logic.", desc_zh: "《福爾摩斯探案》：追求極致客觀推理與底層邏輯的解密者。" },
-          { cat_en: "Comic / Anime", cat_zh: "動漫角色", name_en: "L Lawliet", name_zh: "L (龍崎)", desc_en: "Death Note: Unconventional detective operating on pure theory.", desc_zh: "《死亡筆記本》：打破常規、以純粹推理縱橫局勢的大偵探。" },
-          { cat_en: "Public Celebrity", cat_zh: "著名人物", name_en: "Albert Einstein & Bill Gates", name_zh: "愛因斯坦 / 比爾·蓋茲", desc_en: "Theoretical Physicist & Tech Pioneer.", desc_zh: "重新定義物理學基礎與推動計算機革命的先驅。" }
-        ],
-        recs: [
-          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Software Engineering, Theoretical Physics, Data Science, Philosophy / Research", name_zh: "軟體架構與算法研發、理論物理/數學研究、數據科學、哲學/學術研究" },
-          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Hardware Modding, Puzzle Solving, Astronomy, World-Building Game Design", name_zh: "硬體/軟體拆解改造、高難度解謎遊戲、業餘天文觀測、虛擬世界架構與遊戲設計" }
-        ],
-        reason_en: "Why these recommendations fit: Dominant Ti craves total logical precision and deep theoretical consistency, while auxiliary Ne enjoys exploring dynamic possibilities. Environments in tech architecture, scientific research, and data modeling allow you to deconstruct problems to first principles without being coerced into rigid compliance. Hobbies like modding, astronomy, or puzzle solving give your mind a sandbox to test mental models purely for intellectual curiosity.",
-        reason_zh: "推薦理由與心智機制對應：主導功能內傾思考（Ti）追求嚴密底層邏輯與第一原理，輔助功能外傾直覺（Ne）則樂於探求多向度的假設可能性。算法研發、數據科學或學術研究能讓你不受干擾地剖析事物運作本質；而硬體改造、天文觀測與解謎等興趣，為你提供了一個無邊界的思維沙盒，滿足純粹的探索慾。",
-        sugg_en: ["Set realistic execution deadlines to prevent perpetual analysis paralysis.", "Share draft ideas early rather than waiting for 100% conceptual perfection.", "Engage in physical hands-on activities to balance intense mental abstraction."],
-        sugg_zh: ["設定務實的執行截止日期，避免陷入「過度分析癱瘓」。", "在構想達到完美之前，嘗試主動向外分享草案。", "參與具體的實體活動，以平衡過度的抽象思維。"]
-      },
-      "INFJ": {
-        code: "Ni-Fe-Ti-Se", title_en: "Insightful Counselor", title_zh: "具洞察力的諮商者", emoji: "🛡️",
-        story_en: "You possess a rare synthesis of profound intuitive vision (Ni) and deep human empathy (Fe). You naturally sense underlying human motivations and future trajectories, striving to facilitate growth and systemic harmony.",
-        story_zh: "你具備罕見的深邃直覺遠見（Ni）與真摯的人文共情力（Fe）。你能敏銳感知他人潛在的情感動機與未來的生命軌跡，並矢志於促進個人的成長與群體和諧。",
-
-        stack_en: "• Dominant Ni (Hero): Perceives deep symbolic patterns and psychological archetypes.\n• Auxiliary Fe (Parent): Harmonizes interpersonal relationships and fosters collective growth.\n• Tertiary Ti (Child): Analyzes concepts internally to ensure theoretical soundness.\n• Inferior Se (Aspirant): Under stress, may feel overwhelmed by noisy physical environments.",
-        stack_zh: "• 主導功能 Ni（心智洞察）：感知深層的心理原型與長遠發展規律。\n• 輔助功能 Fe（共情連結）：調和人際氛圍，引導他人實現心智成長。\n• 第三功能 Ti（內在理路）：私下梳理概念，確保觀點具備邏輯自洽。\n• 劣勢功能 Se（環境過載）：在壓力下，易受嘈雜的物理環境或感官刺激干擾。",
-
-        analogy_en: "'The Visionary Sanctuary Guide': Standing quietly on a high ridge, perceiving the invisible currents of human emotion and gently guiding lost travelers home.",
-        analogy_zh: "「心靈聖地的引路人」：靜立於高處俯瞰人心的潮汐變化，以柔和而深邃的智慧指引迷途者尋回內心的方向。",
-
-        workplace_en: "You excel as a psychological counselor, organizational cultural strategist, or visionary mentor. You demand work that aligns with your ethical ideals and despise purely transactional environments.",
-        workplace_zh: "你在心理諮商、組織文化發展與導師角色中表現卓越。你要求工作必須契合心中的道德願景，極度反感純粹功利與冷漠交易型的環境。",
-
-        stress_en: "When emotionally drained, your inferior Se can trigger sensory exhaustion or an obsessive focus on tidying external chaos.",
-        stress_zh: "當情感過度透支時，你的劣勢功能 Se 可能引發感官崩潰、極度疲憊，或對周遭環境的秩序產生強迫性的整理衝動。",
-
-        figures: [
-          { cat_en: "Movie Character", cat_zh: "電影角色", name_en: "Gandalf", name_zh: "甘道夫", desc_en: "The Lord of the Rings: Wise mentor guiding world affairs behind the scenes.", desc_zh: "《指環王》：以遠見默默指引世界局勢方向的智慧導師。" },
-          { cat_en: "Comic / Anime", cat_zh: "動漫角色", name_en: "Itachi Uchiha", name_zh: "宇智波鼬", desc_en: "Naruto: Deep sacrifice for overarching peace and future balance.", desc_zh: "《火影忍者》：為了長遠和諧與大局忍辱負重的洞察者。" },
-          { cat_en: "Public Celebrity", cat_zh: "著名人物", name_en: "Carl Jung & Lady Gaga", name_zh: "卡爾·榮格 / Lady Gaga", desc_en: "Analytical Psychologist & Empathetic Artist.", desc_zh: "深層心理學創始者與具備強大共情力的藝術家。" }
-        ],
-        recs: [
-          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Psychotherapy, Human Resources Strategy, Educational Leadership, Non-profit Directing", name_zh: "心理治療與諮商、組織文化與人才發展、教育推廣管理、非營利組織領袖" },
-          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Symbolic Creative Writing, Mindful Meditation, Visiting Museums, Journaling", name_zh: "寓言/象徵文學創作、正念冥想、博物館與藝術展巡禮、深度閱讀與冥想日誌" }
-        ],
-        reason_en: "Why these recommendations fit: Dominant Ni perceives subtle long-term patterns in human development, while auxiliary Fe builds meaningful interpersonal connections and harmony. Professions in counseling, educational strategy, or organizational culture allow you to guide individuals toward genuine personal growth. Hobbies focused on reflection, symbolism, and quiet artistic expression help restore your emotional reserves while feeding your deep need for narrative meaning.",
-        reason_zh: "推薦理由與心智機制對應：主導功能內傾直覺（Ni）讓你對人性轉變趨勢有深邃預判，輔助功能外傾情感（Fe）則帶來溫暖的人際連結能力。心理諮商、教育或組織文化發展能讓你協助他人實現長遠改變；而正念冥想、博物館巡禮與象徵文學寫作等興趣，則能助你在靜謐中滋養心靈，梳理豐富的直覺體驗。",
-        sugg_en: ["Schedule non-negotiable quiet solitude time to recharge your mental battery.", "Differentiate your own true feelings from emotions absorbed from people around you.", "Express your needs directly without expecting others to read your mind."],
-        sugg_zh: ["安排絕對不可妥協的獨處時間，為你的認知能量充電。", "學會區分自己的真實情緒與吸收自他人的壓力。", "直接表達自身需求，避免期待他人能全憑直覺猜中。"]
-      },
-      "ENTP": {
-        code: "Ne-Ti-Fe-Si", title_en: "Innovative Debater", title_zh: "創新辯論家", emoji: "⚡",
-        story_en: "You are an intellectual adventurer powered by vibrant exploration (Ne) and sharp analytical deconstruction (Ti). You love connecting disparate fields and questioning outdated assumptions.",
-        story_zh: "你是充滿好奇心的思想冒險家，由無限的創新探索（Ne）與犀利的邏輯解構（Ti）雙引擎驅動。你熱衷於跨領域的概念碰撞，並樂於質疑陳舊的前置假設。",
-
-        stack_en: "• Dominant Ne (Hero): Generates endless innovative concepts and sees multiple options.\n• Auxiliary Ti (Parent): Pressure-tests ideas for logical soundness and structural integrity.\n• Tertiary Fe (Child): Engages audience energy and uses charm during debates.\n• Inferior Si (Aspirant): Under stress, may neglect routine maintenance or struggle with details.",
-        stack_zh: "• 主導功能 Ne（點子源泉）：生成源源不絕的破局點子，看見無限的替代方案。\n• 輔助功能 Ti（邏輯質驗）：嚴苛審視點子的內在邏輯，確保結構成立。\n• 第三功能 Fe（魅力互動）：善於捕捉聽眾情緒，在辯論與溝通中注入親和力。\n• 劣勢功能 Si（細節盲點）：在壓力下，容易忽視例行公事與細節歸檔。",
-
-        analogy_en: "'The Conceptual Catalyst': Colliding opposing theoretical concepts together to ignite brilliant technological or creative breakthroughs.",
-        analogy_zh: "「思想的對撞機」：讓相互對立的概念在腦海中劇烈碰撞，從而點燃突破性的科技或創意火花。",
-
-        workplace_en: "You thrive in startup innovation, venture capital, creative direction, and strategic consulting. You hate rigid rules, repetitive bureaucratic tasks, and dogmatic thinking.",
-        workplace_zh: "你在新創開發、風險投資、廣告創意與戰略諮詢等領域如魚得水。你極度厭惡僵化的規則、重複性的行政作業與盲目的墨守成規。",
-
-        stress_en: "Under prolonged routine stress, your inferior Si can manifest as obsessive hypochondria, fixating on minor bodily symptoms, or feelings of claustrophobic paralysis.",
-        stress_zh: "當被長期困於死板的常規中時，你的劣勢功能 Si 可能引發過度的健康焦慮、對身體微小不適的強迫性關注，或感到強烈的幽閉恐慌。",
-
-        figures: [
-          { cat_en: "Movie Character", cat_zh: "電影角色", name_en: "Tony Stark / Iron Man", name_zh: "東尼·史塔克 / 鋼鐵人", desc_en: "MCU: Brash genius innovating solutions under extreme chaos.", desc_zh: "《漫威宇宙》：在混局中以絕頂智慧與極速反覆運算突破重圍的創始人。" },
-          { cat_en: "Comic / Anime", cat_zh: "動漫角色", name_en: "Gintoki Sakata", name_zh: "坂田銀時", desc_en: "Gintama: Unconventional thinker challenging establishment rules.", desc_zh: "《銀魂》：看似隨性、實則打破常規的自由魂魄。" },
-          { cat_en: "Public Celebrity", cat_zh: "著名人物", name_en: "Steve Jobs & Richard Feynman", name_zh: "史蒂夫·賈伯斯 / 理查·費曼", desc_en: "Tech Innovator & Nobel Physicist.", desc_zh: "重新定義產品體驗的顛覆者與幽默風趣的物理學家。" }
-        ],
-        recs: [
-          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Venture Capital, Entrepreneurship, Creative Direction, Intellectual Property Law", name_zh: "創投/風險投資、連續創業、廣告創意總監、智慧財產權法律諮詢、科技新創" },
-          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Improv Theater, Debate / Podcasting, Hackathons, Rapid Prototype Building", name_zh: "即興劇表演、播客節目主持/辯論、黑客松競賽、快速原型產品製作" }
-        ],
-        reason_en: "Why these recommendations fit: Dominant Ne thrives on unearthing disruptive concepts, paired with auxiliary Ti's ability to rigorously pressure-test logical validity. Entrepreneurship, venture capital, and creative direction allow you to pivot rapidly and challenge conventional status quo without getting stuck in static routine. Dynamic activities like hackathons, podcasting, or improv satisfy your urge for brain-stretching, fast-paced conceptual sparring.",
-        reason_zh: "推薦理由與心智機制對應：主導功能外傾直覺（Ne）驅使你探尋破局創新，輔助功能內傾思考（Ti）則能進行敏銳嚴謹的邏輯質驗。創業、風投與創意總監等職業能為你提供快速反覆運算與打破常規的舞台；而即興劇、播客主持人與黑客松等興趣，則能讓你享受快節奏的概念碰撞與腦力發酵。",
-        sugg_en: ["Commit to seeing high-priority projects through to complete implementation.", "Recognize when debating ideas might overwhelm more sensitive collaborators.", "Establish routine systems or delegate to manage practical day-to-day details."],
-        sugg_zh: ["承諾並堅持將高優先級的項目貫徹執行至最終落實。", "意識到過度辯論可能對較為敏感的合作夥伴造成壓力。", "建立規律的系統或有效委派他人來處理日常具體的行政細節。"]
-      },
-      "ENFP": {
-        code: "Ne-Fi-Te-Si", title_en: "Inspiring Explorer", title_zh: "充滿靈感的探索者", emoji: "🌊",
-        story_en: "You are a radiant source of creative enthusiasm (Ne) rooted in deep personal values (Fi). You see infinite human possibilities and seek to inspire genuine personal growth in everyone you connect with.",
-        story_zh: "你是充滿熱情的創意火炬，由外傾直覺（Ne）與深層個體價值觀（Fi）雙重驅動。你能看到無窮的人文可能性，並致力於激勵身邊的每個人活出真實的自我。",
-
-        stack_en: "• Dominant Ne (Hero): Explores vibrant external possibilities and future potential.\n• Auxiliary Fi (Parent): Filters choices through personal authenticity and empathy.\n• Tertiary Te (Child): Organizes project execution when motivated by passion.\n• Inferior Si (Aspirant): Under stress, may feel overwhelmed by routine or nostalgia.",
-        stack_zh: "• 主導功能 Ne（可能性探求）：探索外部世界無窮的機會與潛在未來。\n• 輔助功能 Fi（真實心聲）：以內在價值觀與同理心校準所有選擇。\n• 第三功能 Te（目標推進）：在受到熱情驅動時，能展現出色的專案執行力。\n• 劣勢功能 Si（常規束縛）：在壓力下，易對枯燥的細節整理產生牴觸感。",
-
-        analogy_en: "'The Spark Champion': Bringing fresh wind to stagnant situations, inspiring people to embark on bold, authentic journeys.",
-        analogy_zh: "「點燃靈魂的風之使者」：為沉悶停滯的局勢注入全新風向，激勵人們踏上尋找真實自我的冒險之旅。",
-
-        workplace_en: "You thrive in campaign design, community engagement, media creation, and travel innovation. You despise repetitive bureaucracy and cold, unfeeling corporate cultures.",
-        workplace_zh: "你在行銷企劃、社群體驗、新媒體創作與旅遊體驗設計中大放異彩。你極度討厭重複性的官僚體制與冰冷無情的人際氛圍。",
-
-        stress_en: "When overwhelmed by inescapable routine, your inferior Si can manifest as obsessive worry about bodily ailments or feeling trapped by past mistakes.",
-        stress_zh: "當長期被瑣碎事務困住時，你的劣勢功能 Si 可能讓你陷於對過去錯誤的反覆反芻，或對身體健康產生誇大的不安。",
-
-        figures: [
-          { cat_en: "Movie Character", cat_zh: "電影角色", name_en: "Peter Parker / Spider-Man", name_zh: "彼得·帕克 / 蜘蛛人", desc_en: "Spider-Man: Empathetic hero improvising creative solutions.", desc_zh: "《蜘蛛人》：充滿熱情、具備高超即興應變能力的平凡英雄。" },
-          { cat_en: "Comic / Anime", cat_zh: "動漫角色", name_en: "Monkey D. Luffy", name_zh: "蒙其·D·魯夫", desc_en: "One Piece: Pure-hearted captain pursuing ultimate freedom.", desc_zh: "《航海王》：追尋極致自由、以無窮感染力凝聚夥伴的船長。" },
-          { cat_en: "Public Celebrity", cat_zh: "著名人物", name_en: "Robin Williams & Walt Disney", name_zh: "羅賓·威廉斯 / 華特·迪士尼", desc_en: "Improvisational Genius & Fantasy Visionary.", desc_zh: "即興表演大師與夢幻娛樂帝國的締造者。" }
-        ],
-        recs: [
-          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Media Production, Community Engagement, Campaign Design, Travel & Tourism Innovation", name_zh: "新媒體內容策劃、社群體驗設計、整合行銷推廣、旅遊與文化體驗創新" },
-          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Blogging / Vlogging, World Travel, Performing Arts, Community Event Organizing", name_zh: "影音Vlog創作、背包環球旅行、舞台劇表演、社群主題派對與活動企劃" }
-        ],
-        reason_en: "Why these recommendations fit: Dominant Ne constantly discovers exciting new horizons, while auxiliary Fi ensures every endeavor resonates with your personal core values. Dynamic roles in media, community building, and campaign strategy allow you to motivate others while retaining freedom of self-expression. Engaging in vlogging, travel, and performing arts keeps your imagination stimulated and allows your authentic personality to shine.",
-        reason_zh: "推薦理由與心智機制對應：主導功能外傾直覺（Ne）讓你眼中充滿新奇機會，輔助功能內傾情感（Fi）則確保行動緊扣個人信念與情感熱情。媒體策劃、體驗設計與旅遊文化創新等行業能賦予你充分的自主性；而旅行、內容創作與舞台表演等興趣，能持續滋養你的想像力，並讓真摯的感染力自然流露。",
-        sugg_en: ["Prioritize your top ideas rather than pursuing every exciting spark at once.", "Develop structured habits to maintain long-term focus on key goals.", "Build grounding routines to restore your physical energy levels."],
-        sugg_zh: ["學會為你的點子排序，而非同時追求每個令人興奮的火花。", "養成結構化的習慣，保持對核心目標的長期專注。", "建立穩固的生活規律以有效調配感官與生理能量。"]
-      },
-      "ENTJ": {
-        code: "Te-Ni-Se-Fi", title_en: "Decisive Commander", title_zh: "果斷的指揮官", emoji: "🚀",
-        story_en: "You are a master organizer driven by empirical efficiency (Te) and backed by long-range strategic vision (Ni). You excel at structuring chaotic environments into goal-oriented powerhouses.",
-        story_zh: "你是卓越的組織指揮家，由實用效率（Te）與長遠戰略前瞻（Ni）強強驅動。你擅長將混亂的環境重組為目標導向的高效運作機器。",
-
-        stack_en: "• Dominant Te (Hero): Maximizes structural efficiency, speed, and objective results.\n• Auxiliary Ni (Parent): Directs strategy through deep trend anticipation.\n• Tertiary Se (Child): Acts decisively in the present environment.\n• Inferior Fi (Aspirant): Under stress, may suppress personal vulnerabilities or feel unappreciated.",
-        stack_zh: "• 主導功能 Te（組織掌控）：追求效率極致，推動客觀目標快速達成。\n• 輔助功能 Ni（戰略遠見）：洞察長遠趨勢，為組織制定宏觀戰略方向。\n• 第三功能 Se（果斷行動）：在現實環境中果斷出擊，捕捉當下契機。\n• 劣勢功能 Fi（軟肋壓抑）：在壓力下，可能壓抑個人情感傷痛或感到缺乏理解。",
-
-        analogy_en: "'The Master Enterprise Architect': Converting disorganized operations into streamlined, scalable infrastructure engineered for total victory.",
-        analogy_zh: "「企業帝國的總總裁」：將散亂無章的流程梳理為規模化、具備強大戰鬥力的營運結構。",
-
-        workplace_en: "You thrive in executive leadership, investment banking, operations management, and legal advocacy. You hate disorganization, passivity, excuses, and waste of resources.",
-        workplace_zh: "你在高階企業管理、投資銀行、營運指揮與法務訴訟中表現出眾。你極度反感無序、被動、推卸責任與資源浪費。",
-
-        stress_en: "Under severe frustration or loss of control, your inferior Fi may manifest as hypersensitive emotional distress or an uncomfortable feeling of isolation.",
-        stress_zh: "當遭受重大挫折或失去控局感時，你的劣勢功能 Fi 可能引發突如其來的孤獨感或對個人內在價值的短暫質疑。",
-
-        figures: [
-          { cat_en: "Movie Character", cat_zh: "電影角色", name_en: "Miranda Priestly", name_zh: "米蘭達·普利斯萊", desc_en: "The Devil Wears Prada: High-standard executive demanding total excellence.", desc_zh: "《穿著Prada的惡魔》：追求極致卓越與高標準執行的時尚教母。" },
-          { cat_en: "Comic / Anime", cat_zh: "動漫角色", name_en: "Erwin Smith", name_zh: "艾爾文·史密斯", desc_en: "Attack on Titan: Visionary commander making tough strategic calls.", desc_zh: "《進擊的巨人》：為實現宏大願景敢於做艱難決策的團長。" },
-          { cat_en: "Public Celebrity", cat_zh: "著名人物", name_en: "Steve Ballmer & Gordon Ramsay", name_zh: "史蒂夫·鮑爾默 / 戈登·拉姆齊", desc_en: "Tech CEO & Michelin Star Master Chef.", desc_zh: "充滿激情的高管與對品質要求極高的主廚。" }
-        ],
-        recs: [
-          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Executive Leadership, Operations Management, Investment Banking, Legal Advocacy", name_zh: "高階企業管理、營運總監、投資銀行、商業法務律師、大型專案指揮" },
-          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Competitive Endurance Sports, Marathon / Triathlon, Real Estate Investment, Golf", name_zh: "競技性體育賽事、馬拉松/鐵人三項、不動產投資研究、高爾夫戰略賽事" }
-        ],
-        reason_en: "Why these recommendations fit: Dominant Te seeks clear measurable goals, system optimization, and total operational control, supported by auxiliary Ni's long-range foresight. Positions in executive management, operations, and corporate law give you the direct leverage needed to build scalable organizations. Hobbies with high goals like marathons, real estate investment, or competitive sports allow you to channel your drive into measurable personal achievements.",
-        reason_zh: "推薦理由與心智機制對應：主導功能外傾思考（Te）追求明確可衡量的目標與效率極致，輔助功能內傾直覺（Ni）則給予宏觀戰略前瞻。企業高階管理、營運總監與投資銀行等領域能為你提供發揮組織統籌力的權杖；而馬拉松、鐵人三項與資產配置研究等興趣，則能讓你持續挑戰自我極限，享受達成宏大目標的滿足感。",
-        sugg_en: ["Practice active listening to incorporate qualitative input from your team.", "Praise process improvements and individual effort, not just bottom-line goals.", "Balance high drive with intentional periods of physical rest."],
-        sugg_zh: ["練習積極傾聽，以吸納具有價值的質化意見。", "讚賞過程中的進步與個人努力，而非僅關注最終指標。", "在強大的推進力與主動休息之間取得平衡，避免過勞。"]
-      },
-      "ENFJ": {
-        code: "Fe-Ni-Se-Ti", title_en: "Empathetic Catalyst", title_zh: "具共情力的催化劑", emoji: "🔥",
-        story_en: "You are an inspiring mentor driven by interpersonal harmony (Fe) and visionary insight into human development (Ni). You connect deeply with group dynamics and motivate people toward collective transformation.",
-        story_zh: "你是具備感染力的導師，由人際和諧（Fe）與對人性發展的遠見（Ni）雙重驅動。你擅長凝聚團隊情感，並激勵大眾邁向共同的蛻變目標。",
-
-        stack_en: "• Dominant Fe (Hero): Tunes into group emotional consensus and unleashes potential.\n• Auxiliary Ni (Parent): Foresees emotional pathways and long-term individual growth.\n• Tertiary Se (Child): Connects in the moment through charismatic presentation.\n• Inferior Ti (Aspirant): Under stress, may engage in harsh internal self-criticism.",
-        stack_zh: "• 主導功能 Fe（群體共鳴）：精準感知團隊氛圍，調動眾人潛能。\n• 輔助功能 Ni（成長預見）：預見個體的長遠發展路徑，給予精準指引。\n• 第三功能 Se（舞台魅力）：以極具感染力的當下互動贏得信賴。\n• 劣勢功能 Ti（過度反省）：在壓力下，易陷入苛刻的內在自我懷疑。",
-
-        analogy_en: "'The Master Conductor': Orchestrating individual instruments into a magnificent symphony of shared human aspiration.",
-        analogy_zh: "「靈魂交響樂的指揮家」：將不同個體的獨特音符調和成一部震撼人心的宏大和聲。",
-
-        workplace_en: "You excel in PR, corporate coaching, community leadership, and educational directing. You hate toxic interpersonal conflict, cold cynicism, and mercenary environments.",
-        workplace_zh: "你在公關傳播、企業教練、社群領袖與教育拓展領域光芒四射。你極度反感充滿敵意的人際內耗、冷嘲熱諷的文化與缺乏溫度的環境。",
-
-        stress_en: "When personal sacrifice goes unnoticed, your inferior Ti can trigger intense self-doubt, over-analyzing past mistakes, or feeling unvalued.",
-        stress_zh: "當你的付出未獲回應時，你的劣勢功能 Ti 可能引發過度的自我批判，陷入對細枝末節的病態剖析中。",
-
-        figures: [
-          { cat_en: "Movie Character", cat_zh: "電影角色", name_en: "Morpheus", name_zh: "墨菲斯", desc_en: "The Matrix: Inspirational leader believing in human potential.", desc_zh: "《駭客任務》：堅定信念、喚醒他人內在潛能的引路人。" },
-          { cat_en: "Comic / Anime", cat_zh: "動漫角色", name_en: "All Might", name_zh: "歐爾麥特", desc_en: "My Hero Academia: Pillar of peace providing inspirational hope.", desc_zh: "《我的英雄學院》：以燦爛笑容與強大感染力守護大家的精神支柱。" },
-          { cat_en: "Public Celebrity", cat_zh: "著名人物", name_en: "Oprah Winfrey & Barack Obama", name_zh: "歐普拉 / 巴拉克·歐巴馬", desc_en: "Media Leader & Inspiring Orator.", desc_zh: "具備強大共情力的主持人與具備號召力的領袖。" }
-        ],
-        recs: [
-          { cat_en: "Suggested Careers", cat_zh: "推薦職業 / 行業", name_en: "Public Relations, Community Leadership, Executive Coaching, Training & Development", name_zh: "公共關係與品牌傳播、非營利組織領袖、企業高階教練、培訓與人才拓展" },
-          { cat_en: "Suggested Hobbies", cat_zh: "推薦興趣愛好", name_en: "Hosting Dinner Parties, Group Fitness Coaching, Volunteering, Public Speaking Workshops", name_zh: "主持主題晚宴與聚會、團體健身指導、公益志工組織、公眾演講工作坊" }
-        ],
-        reason_en: "Why these recommendations fit: Dominant Fe intuitively mirrors and organizes social dynamics to build unified consensus, while auxiliary Ni perceives deeper individual motives. PR, executive coaching, and community leadership allow you to guide groups toward shared transformational objectives. Group-centric hobbies like hosting gatherings, public speaking, or group coaching align perfectly with your passion for uplifting people together.",
-        reason_zh: "推薦理由與心智機制對應：主導功能外傾情感（Fe）能自然凝聚群體情感，輔助功能內傾直覺（Ni）則能敏銳察覺長遠的人性需求。公共關係、人才培訓與教練指導領域能充分發揮你激勵他人的天賦；而聚會主持、公益志工與演講工作坊等興趣，則能讓你置身於充滿共鳴的人際網絡中，體驗攜手共進的樂趣。",
-        sugg_en: ["Ensure your own emotional health is prioritized alongside helping others.", "Accept that constructive boundary conflicts are necessary for genuine growth.", "Avoid over-extending your personal schedule."],
-        sugg_zh: ["在關懷他人的同時，確保將自己的身心健康放在優先位置。", "接納建設性的界線衝突有時是促進真實成長的必要過程。", "避免過度承諾而導致精力透支。"]
+        reason_en: "Why these recommendations fit: Your dominant Ni seeks long-term visions, supported by auxiliary Te's drive for efficiency.",
+        reason_zh: "推薦理由與心智機制對應：主導功能內傾直覺（Ni）賦予前瞻能力，輔助功能外傾思考（Te）提供系統落實能力。",
+        sugg_en: ["Allow room for unexpected pivot opportunities.", "Practice active patience when communicating complex blueprints."],
+        sugg_zh: ["在長期計劃中預留應對突發變化的彈性空間。", "向跨領域團隊傳達藍圖時保持耐心。"]
       }
     };
 
@@ -1105,6 +1251,8 @@
     let activeQuestions = [];
     let currentIdx = 0;
     let functionScores = { Ni:0, Ne:0, Si:0, Se:0, Ti:0, Te:0, Fi:0, Fe:0 };
+    let testCompletionTimestamp = "";
+    let calculatedAxesData = [];
 
     function toggleTheme() {
       const html = document.documentElement;
@@ -1132,7 +1280,6 @@
       functionScores = { Ni:0, Ne:0, Si:0, Se:0, Ti:0, Te:0, Fi:0, Fe:0 };
       currentIdx = 0;
 
-      // Randomly pick 20 questions from the 80-question library
       const shuffled = shuffleArray(questionLibrary);
       activeQuestions = shuffled.slice(0, 20);
 
@@ -1188,7 +1335,6 @@
       }
     }
 
-    /* 3-Second Loading Effect before Showing Result */
     function run3SecondAnalysis() {
       showPage("page-analysing");
       
@@ -1224,6 +1370,14 @@
 
         if (elapsed >= total) {
           clearInterval(timer);
+          // Store completion timestamp
+          const now = new Date();
+          testCompletionTimestamp = now.getFullYear() + "-" + 
+            String(now.getMonth() + 1).padStart(2, '0') + "-" + 
+            String(now.getDate()).padStart(2, '0') + " " + 
+            String(now.getHours()).padStart(2, '0') + ":" + 
+            String(now.getMinutes()).padStart(2, '0');
+
           calculateAndDisplayResults();
           showPage("page-result");
         }
@@ -1231,7 +1385,6 @@
     }
 
     function calculateAndDisplayResults() {
-      // Calculation for E vs I, N vs S, T vs F, J vs P
       const eScore = functionScores.Ne + functionScores.Se + functionScores.Te + functionScores.Fe;
       const iScore = functionScores.Ni + functionScores.Si + functionScores.Ti + functionScores.Fi;
       const letter1 = eScore >= iScore ? "E" : "I";
@@ -1251,13 +1404,11 @@
       const mbti = `${letter1}${letter2}${letter3}${letter4}`;
       const data = typeMapping[mbti] || typeMapping["INFP"];
 
-      // Update Basic Header
       document.getElementById("res-mbti").textContent = mbti;
       document.getElementById("res-code").textContent = `(${data.code})`;
       document.getElementById("res-title").textContent = currentLang === "zh" ? data.title_zh : data.title_en;
       document.getElementById("res-emoji-float").textContent = data.emoji;
 
-      // Populate Story, Stack, Analogy, Workplace, Stress
       document.getElementById("res-story").textContent = currentLang === "zh" ? data.story_zh : data.story_en;
       document.getElementById("res-stack").textContent = currentLang === "zh" ? data.stack_zh : data.stack_en;
       document.getElementById("res-analogy").textContent = currentLang === "zh" ? data.analogy_zh : data.analogy_en;
@@ -1265,7 +1416,6 @@
       document.getElementById("res-stress").textContent = currentLang === "zh" ? data.stress_zh : data.stress_en;
       document.getElementById("res-reason").textContent = currentLang === "zh" ? data.reason_zh : data.reason_en;
 
-      // Render Representative Figures Grid
       const figuresGrid = document.getElementById("res-figures");
       figuresGrid.innerHTML = "";
       if (data.figures) {
@@ -1281,7 +1431,6 @@
         });
       }
 
-      // Render Suggested Career & Hobbies
       const recsGrid = document.getElementById("res-recs");
       recsGrid.innerHTML = "";
       if (data.recs) {
@@ -1296,7 +1445,6 @@
         });
       }
 
-      // Populate Suggestions
       const suggList = document.getElementById("res-suggestions");
       suggList.innerHTML = "";
       const items = currentLang === "zh" ? data.sugg_zh : data.sugg_en;
@@ -1306,10 +1454,8 @@
         suggList.appendChild(li);
       });
 
-      // RENDER BI-DIRECTIONAL CHART (BEFORE BREAKDOWN SCORE)
       renderBiDirectionalChart(eScore, iScore, nScore, sScore, tScore, fScore, jScore, pScore);
 
-      // Render 8 scores breakdown
       const scoresContainer = document.getElementById("scores-container");
       scoresContainer.innerHTML = "";
       Object.keys(functionScores).forEach(f => {
@@ -1320,19 +1466,18 @@
       });
     }
 
-    /* Bi-Directional Axis Chart Generator */
     function renderBiDirectionalChart(e, i, n, s, t, f, j, p) {
       const container = document.getElementById("mbti-bidirectional-chart");
       container.innerHTML = "";
 
-      const axes = [
+      calculatedAxesData = [
         { leftLabel: "Extraversion (E)", rightLabel: "Introversion (I)", leftVal: e, rightVal: i },
         { leftLabel: "Intuition (N)", rightLabel: "Sensing (S)", leftVal: n, rightVal: s },
         { leftLabel: "Thinking (T)", rightLabel: "Feeling (F)", leftVal: t, rightVal: f },
         { leftLabel: "Judging (J)", rightLabel: "Perceiving (P)", leftVal: j, rightVal: p }
       ];
 
-      axes.forEach(axis => {
+      calculatedAxesData.forEach(axis => {
         const total = (axis.leftVal + axis.rightVal) || 1;
         const leftPct = Math.round((axis.leftVal / total) * 100);
         const rightPct = 100 - leftPct;
@@ -1351,6 +1496,132 @@
           </div>
         `;
         container.appendChild(row);
+      });
+    }
+
+    /* --------------------------------------------------
+       4. CERTIFICATE GENERATION & GEOLOCATION LOGIC
+       -------------------------------------------------- */
+    function openCertModal() {
+      document.getElementById("cert-modal").classList.add("active");
+    }
+
+    function closeCertModal() {
+      document.getElementById("cert-modal").classList.remove("active");
+    }
+
+    function detectLocation() {
+      const locInput = document.getElementById("input-user-location");
+      if ("geolocation" in navigator) {
+        locInput.value = "Detecting...";
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            
+            try {
+              // Reverse Geocoding via OpenStreetMap Nominatim API
+              const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
+              if (!response.ok) throw new Error("Geocoding failed");
+              const data = await response.json();
+              
+              const address = data.address || {};
+              const region = address.city || address.town || address.village || address.suburb || address.county || address.state || address.country || "Macau";
+              locInput.value = region;
+            } catch (err) {
+              locInput.value = "Coloane, Macau"; // Fallback default on error
+            }
+          },
+          (error) => {
+            locInput.value = "Coloane, Macau"; // Fallback default on deny/failure
+          }
+        );
+      } else {
+        locInput.value = "Macau";
+      }
+    }
+
+    function generateAndDownloadPNG() {
+      const name = document.getElementById("input-user-name").value.trim() || "Henrique Sou";
+      const location = document.getElementById("input-user-location").value.trim() || "Macau";
+
+      const mbti = document.getElementById("res-mbti").textContent;
+      const title = document.getElementById("res-title").textContent;
+      const code = document.getElementById("res-code").textContent;
+      const story = document.getElementById("res-story").textContent;
+
+      document.getElementById("cert-out-name").textContent = name;
+      document.getElementById("cert-out-location").textContent = location;
+      document.getElementById("cert-out-mbti").textContent = mbti;
+      document.getElementById("cert-out-title").textContent = title;
+      document.getElementById("cert-out-code").textContent = code.replace(/[()]/g, '');
+      document.getElementById("cert-out-time").textContent = testCompletionTimestamp || new Date().toLocaleString();
+      document.getElementById("cert-out-story").textContent = story;
+
+      // Extract Hero and Parent functions from stack code
+      const stackFuncs = code.replace(/[()]/g, '').split('-');
+      if (stackFuncs.length >= 2) {
+        document.getElementById("cert-out-hero-parent").textContent = `Hero: ${stackFuncs[0]} | Parent: ${stackFuncs[1]}`;
+      }
+
+      // Populate Dichotomies Bar Chart in Certificate
+      const certDich = document.getElementById("cert-out-dichotomies");
+      certDich.innerHTML = "";
+      calculatedAxesData.forEach(axis => {
+        const total = (axis.leftVal + axis.rightVal) || 1;
+        const leftPct = Math.round((axis.leftVal / total) * 100);
+        const rightPct = 100 - leftPct;
+
+        const item = document.createElement("div");
+        item.className = "cert-axis-item";
+        item.innerHTML = `
+          <div style="display: flex; justify-content: space-between; font-weight: 600;">
+            <span style="color: #38bdf8;">${axis.leftLabel.split(' ')[0]} ${leftPct}%</span>
+            <span style="color: #a855f7;">${axis.rightLabel.split(' ')[0]} ${rightPct}%</span>
+          </div>
+          <div class="cert-axis-bar-bg">
+            <div class="cert-axis-bar-fill" style="width: ${leftPct}%;"></div>
+          </div>
+        `;
+        certDich.appendChild(item);
+      });
+
+      // Populate Recommendations in Certificate
+      const certRecs = document.getElementById("cert-out-recs");
+      certRecs.innerHTML = "";
+      const recCards = document.querySelectorAll("#res-recs .rec-card");
+      recCards.forEach(rc => {
+        const cat = rc.querySelector(".cat") ? rc.querySelector(".cat").textContent : "";
+        const nameText = rc.querySelector(".name") ? rc.querySelector(".name").textContent : "";
+        
+        const row = document.createElement("div");
+        row.innerHTML = `<strong style="color: #f59e0b;">${cat}:</strong> ${nameText}`;
+        certRecs.appendChild(row);
+      });
+
+      // Populate 8 Cognitive Dimension Scores
+      const certScores = document.getElementById("cert-out-scores");
+      certScores.innerHTML = "";
+      Object.keys(functionScores).forEach(f => {
+        const div = document.createElement("div");
+        div.className = "cert-score-item";
+        div.innerHTML = `<strong style="color: #a855f7;">${f}</strong>: ${functionScores[f]} pts`;
+        certScores.appendChild(div);
+      });
+
+      const certTarget = document.getElementById("cert-frame");
+
+      html2canvas(certTarget, {
+        scale: 2,
+        backgroundColor: "#0f172a"
+      }).then(canvas => {
+        const image = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.download = `Cognitive_Certificate_${mbti}_${name.replace(/\s+/g, '_')}.png`;
+        link.href = image;
+        link.click();
+
+        closeCertModal();
       });
     }
   </script>
