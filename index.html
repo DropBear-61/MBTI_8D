@@ -826,10 +826,10 @@
         <!-- Start Actions -->
         <div class="start-actions">
           <button class="btn-primary" onclick="startQuiz('en')">
-            🚀 Start Test (English)
+            🚀 Start Test
           </button>
           <button class="btn-primary" style="background-color: var(--accent-func);" onclick="startQuiz('zh')">
-            🚀 開始測試 (繁體中文)
+            🚀 開始測試
           </button>
         </div>
 
@@ -995,13 +995,13 @@
 
       <div class="form-group">
         <label for="input-user-name">Your Name / 姓名 *</label>
-        <input type="text" id="input-user-name" class="input-field" placeholder="e.g. Henrique Sou" value="Henrique Sou">
+        <input type="text" id="input-user-name" class="input-field" placeholder="e.g. Your Name" value="Your Name">
       </div>
 
       <div class="form-group">
         <label for="input-user-location">Geolocation / 所在地</label>
         <div class="location-btn-group">
-          <input type="text" id="input-user-location" class="input-field" placeholder="e.g. Macau / 澳門">
+          <input type="text" id="input-user-location" class="input-field" placeholder="e.g. Hong Kong / 香港" value="Hong Kong">
           <button type="button" class="btn-secondary" style="padding: 0.5rem 0.75rem; font-size: 0.85rem;" onclick="detectLocation()">
             📍 Detect
           </button>
@@ -1023,7 +1023,7 @@
         <div class="cert-sub">認知功能分析鑑定證書</div>
 
         <div style="font-size: 0.88rem; color: #94a3b8; margin-top: -0.1rem;">This certifies that</div>
-        <div id="cert-out-name" class="cert-user-name">Henrique Sou</div>
+        <div id="cert-out-name" class="cert-user-name">Your Name</div>
 
         <!-- MBTI Main Title Badge -->
         <div class="cert-mbti-box">
@@ -1078,7 +1078,7 @@
 
         <!-- Meta Footer -->
         <div class="cert-meta-info">
-          <div>📍 Geolocation / 地點: <span id="cert-out-location" style="color: #f8fafc;">Macau</span></div>
+          <div>📍 Geolocation / 地點: <span id="cert-out-location" style="color: #f8fafc;">Hong Kong</span></div>
           <div>🕒 Timestamp / 時間: <span id="cert-out-time" style="color: #f8fafc;">2026-10-01 20:14</span></div>
         </div>
       </div>
@@ -1526,24 +1526,24 @@
               const data = await response.json();
               
               const address = data.address || {};
-              const region = address.city || address.town || address.village || address.suburb || address.county || address.state || address.country || "Macau";
+              const region = address.city || address.town || address.village || address.suburb || address.county || address.state || address.country || "Hong Kong";
               locInput.value = region;
             } catch (err) {
-              locInput.value = "Coloane, Macau"; // Fallback default on error
+              locInput.value = "Hong Kong"; // Fallback default on error
             }
           },
           (error) => {
-            locInput.value = "Coloane, Macau"; // Fallback default on deny/failure
+            locInput.value = "Hong Kong"; // Fallback default on deny/failure
           }
         );
       } else {
-        locInput.value = "Macau";
+        locInput.value = "Hong Kong";
       }
     }
 
     function generateAndDownloadPNG() {
-      const name = document.getElementById("input-user-name").value.trim() || "Henrique Sou";
-      const location = document.getElementById("input-user-location").value.trim() || "Macau";
+      const name = document.getElementById("input-user-name").value.trim() || "Your Name";
+      const location = document.getElementById("input-user-location").value.trim() || "Hong Kong";
 
       const mbti = document.getElementById("res-mbti").textContent;
       const title = document.getElementById("res-title").textContent;
