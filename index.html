@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>8維認知功能性格測試 / 8 Cognitive Dimensions Explorer</title>
-  <!-- html2canvas for canvas rendering and PNG download -->
+  <!-- html2canvas for canvas rendering -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root[data-theme="dark"] {
@@ -230,7 +230,7 @@
     }
 
     .progress-bar-bg {
-      height: 10px;
+      height: 100%;
       background-color: var(--progress-bg);
       border-radius: 5px;
       overflow: hidden;
@@ -551,6 +551,7 @@
       justify-content: center;
       align-items: center;
       z-index: 999;
+      padding: 1rem;
     }
 
     .modal-overlay.active {
@@ -568,6 +569,33 @@
       flex-direction: column;
       gap: 1.25rem;
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-box.cert-preview-box {
+      max-width: 850px;
+      width: 95%;
+      align-items: center;
+    }
+
+    .cert-preview-container {
+      width: 100%;
+      max-height: 70vh;
+      overflow: auto;
+      display: flex;
+      justify-content: center;
+      background: #0f172a;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+    }
+
+    .cert-preview-container img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
     }
 
     .form-group {
@@ -957,10 +985,10 @@
           <div id="scores-container" class="scores-list"></div>
         </div>
 
-        <!-- Certificate Download & Retake Buttons -->
+        <!-- View Certificate & Retake Buttons -->
         <div style="text-align: center; margin-top: 2rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
           <button class="btn-primary" style="background-color: var(--accent-green);" onclick="openCertModal()">
-            🎓 Download Certificate (PNG) / 下載證書
+            🎓 View Certificate (PNG) / 查看證書
           </button>
           <button class="btn-secondary" onclick="showPage('page-landing')">
             🔄 Retake Test / 重新測試
@@ -984,15 +1012,15 @@
     </div>
   </div>
 
-  <!-- MODAL FOR USER DETAILS (CERTIFICATE GENERATION) -->
+  <!-- MODAL FOR USER DETAILS (INPUT DETAILS BEFORE VIEWING) -->
   <div id="cert-modal" class="modal-overlay">
     <div class="modal-box">
       <h2 style="font-size: 1.2rem; font-weight: 700; color: var(--accent-mbti);">
         🎓 Certificate Details / 證書資訊
       </h2>
       <p style="font-size: 0.85rem; color: var(--text-muted);">
-        Enter your details to generate your personalized Cognitive Function Certificate.
-        <br>請輸入資訊以生成您的專屬認知功能證書。
+        Enter your details to generate and view your personalized Cognitive Function Certificate.
+        <br>請輸入資訊以生成並檢視您的專屬認知功能證書。
       </p>
 
       <div class="form-group">
@@ -1012,7 +1040,27 @@
 
       <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem;">
         <button class="btn-secondary" onclick="closeCertModal()">Cancel / 取消</button>
-        <button class="btn-primary" onclick="generateAndDownloadPNG()">Download PNG / 下載</button>
+        <button class="btn-primary" onclick="generateAndPreviewPNG()">View PNG / 查看證書</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL FOR PREVIEWING PNG CERTIFICATE DIRECTLY -->
+  <div id="cert-preview-modal" class="modal-overlay">
+    <div class="modal-box cert-preview-box">
+      <h2 style="font-size: 1.2rem; font-weight: 700; color: var(--accent-mbti); width: 100%; text-align: left;">
+        🎓 Your Cognitive Certificate / 您的認知功能證書
+      </h2>
+      
+      <div class="cert-preview-container">
+        <img id="cert-preview-img" src="" alt="Cognitive Profile Certificate PNG">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem; width: 100%; margin-top: 0.5rem;">
+        <button class="btn-secondary" onclick="closeCertPreviewModal()">Close / 關閉</button>
+        <button class="btn-primary" style="background-color: var(--accent-green);" onclick="downloadPreviewedPNG()">
+          💾 Save Image / 下載圖檔
+        </button>
       </div>
     </div>
   </div>
@@ -1255,6 +1303,8 @@
     let functionScores = { Ni:0, Ne:0, Si:0, Se:0, Ti:0, Te:0, Fi:0, Fe:0 };
     let testCompletionTimestamp = "";
     let calculatedAxesData = [];
+    let generatedImageDataUrl = "";
+    let lastGeneratedFileName = "";
 
     function toggleTheme() {
       const html = document.documentElement;
@@ -1502,7 +1552,7 @@
     }
 
     /* --------------------------------------------------
-       4. CERTIFICATE GENERATION & GEOLOCATION LOGIC
+       4. CERTIFICATE PREVIEW LOGIC
        -------------------------------------------------- */
     function openCertModal() {
       document.getElementById("cert-modal").classList.add("active");
@@ -1510,6 +1560,10 @@
 
     function closeCertModal() {
       document.getElementById("cert-modal").classList.remove("active");
+    }
+
+    function closeCertPreviewModal() {
+      document.getElementById("cert-preview-modal").classList.remove("active");
     }
 
     function detectLocation() {
@@ -1543,7 +1597,7 @@
       }
     }
 
-    function generateAndDownloadPNG() {
+    function generateAndPreviewPNG() {
       const name = document.getElementById("input-user-name").value.trim() || "Your Name";
       const location = document.getElementById("input-user-location").value.trim() || "Hong Kong";
 
@@ -1617,14 +1671,23 @@
         scale: 2,
         backgroundColor: "#ffffff"
       }).then(canvas => {
-        const image = canvas.toDataURL("image/png");
-        const link = document.createElement("a");
-        link.download = `Cognitive_Certificate_${mbti}_${name.replace(/\s+/g, '_')}.png`;
-        link.href = image;
-        link.click();
+        generatedImageDataUrl = canvas.toDataURL("image/png");
+        lastGeneratedFileName = `Cognitive_Certificate_${mbti}_${name.replace(/\s+/g, '_')}.png`;
+
+        // Render preview image into modal directly
+        document.getElementById("cert-preview-img").src = generatedImageDataUrl;
 
         closeCertModal();
+        document.getElementById("cert-preview-modal").classList.add("active");
       });
+    }
+
+    function downloadPreviewedPNG() {
+      if (!generatedImageDataUrl) return;
+      const link = document.createElement("a");
+      link.download = lastGeneratedFileName || "Cognitive_Certificate.png";
+      link.href = generatedImageDataUrl;
+      link.click();
     }
   </script>
 </body>
